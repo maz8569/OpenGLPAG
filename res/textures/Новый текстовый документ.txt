@@ -1,0 +1,79 @@
+void update(float dt)
+{
+    ourShader->setMat4("view", view); 
+    spunkt->update(root->get_transform(), false);
+    model_s = spunkt->get_transform().m_world_matrix;
+    glm::vec3 posit = twod->get_transform().m_position;
+    //twod->set_local_rotation(camera.Position);
+    glm::mat4 field = glm::lookAt(posit, glm::normalize(camera.Position - posit), { 0, -1, 0 });
+    twod->get_transform().m_world_matrix = field;
+    //twod->update(root->get_transform(), true);
+}
+
+void activate_lights(std::shared_ptr<Shader> shader)
+{
+    shader->setFloat("shininess", shinyyy);
+    shader->setVec3("viewPos", camera.Position);
+    glm::vec3 position = model_s * glm::vec4(1.0f);
+    shader->setVec3("pointLight.position", camera.Position);
+    shader->setVec3("pointLight.ambient", pLightColor * p_ambient);
+    shader->setVec3("pointLight.diffuse", pLightColor * p_diffuse);
+    shader->setVec3("pointLight.specular", pLightColor * p_specular);
+    shader->setFloat("pointLight.constant", p_const);
+    shader->setFloat("pointLight.linear", p_lin);
+    shader->setFloat("pointLight.quadratic", p_qua);
+
+}
+
+void render()
+{
+    // render
+// ------
+    glClearColor(0.1f, 0.2f, 0.2f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
+    // activate shader
+    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 model(1.0f);
+    glm::mat4 model2(1.0f);
+    //model = glm::translate(model, { -2.0f, 0.0f, 0.0f });
+    model2 = glm::translate(model2, { 0.225f, 0.145f, 0.0f });
+    model2 = glm::scale(model2, { 0.125, 0.125f, 1.0f });
+
+    ourShader->use();
+    ourShader->setMat4("view", view);
+    ourShader->setMat4("projection", projection);
+    activate_lights(ourShader);
+    ourShader->setInt("texture1", 0);
+    ourShader->setMat4("model", model);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    ourShader->setMat4("model", twod->get_transform().m_world_matrix);
+    glBindTexture(GL_TEXTURE_2D, traincubesTexture);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    //ourShader->setMat4("view", model2);
+    ourShader->setMat4("model", model2);
+    ourShader->setMat4("view", model);
+    glBindTexture(GL_TEXTURE_2D, texture2);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+
+    glBindVertexArray(0);
+
+    glBindTexture(GL_TEXTURE_2D, traincubesTexture);
+
+    lightSourceShader->use();
+    //lightSourceShader->setMat4("view", view);
+    lightSourceShader->setMat4("projection", projection);
+    //model = glm::scale(glm::mat4(1.0f), { 0.1, 0.1, 0.1 });
+
+    lightSourceShader->setMat4("model",spunkt->get_transform().m_world_matrix);
+
+    lightSourceShader->setVec4("aColor", glm::vec4(pLightColor, 0.0f));
+
+    glBindVertexArray(lightSource_VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+}
