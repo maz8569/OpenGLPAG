@@ -1,0 +1,7 @@
+﻿  Building Custom Rule E:/prog/OpenGLPAG/OpenGLPAG/CMakeLists.txt
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_widgets.cpp
+  Создание кода...
+  imgui.vcxproj -> E:\prog\OpenGLPAG\OpenGLPAG\Build\Release\imgui.lib

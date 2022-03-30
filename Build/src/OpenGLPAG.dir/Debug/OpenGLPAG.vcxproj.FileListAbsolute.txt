@@ -1,0 +1,6 @@
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Debug\freetyped.dll
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Debug\zlibd1.dll
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Debug\bz2d.dll
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Debug\libpng16d.dll
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Debug\brotlidec.dll
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Debug\brotlicommon.dll

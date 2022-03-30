@@ -1,0 +1,6 @@
+﻿  Building Custom Rule E:/prog/OpenGLPAG/OpenGLPAG/src/CMakeLists.txt
+  imgui_impl_glfw.cpp
+  imgui_impl_opengl3.cpp
+  main.cpp
+E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(14,10): fatal error C1083: Не удается открыть файл включение: Shader.h: No such file or directory,
+  Создание кода...
