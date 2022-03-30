@@ -9,4 +9,4 @@ compile_commands.json
 CTestTestfile.cmake
 *.tlog
 .vs
-Build/thirdparty
+Build/thirdparty/assimp
