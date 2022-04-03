@@ -1,20 +1,9 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: каталог Output заканчивается не косой чертой.  Этот экземпляр сборки добавит косую черту, поскольку она необходима для правильного определения каталога Output.
-  main.cpp
-E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Shader.h(56,40): warning C4101: e: неиспользованная локальная переменная
-E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Mesh.h(90,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(220,35): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(426,5): warning C4267: аргумент: преобразование из "size_t" в "ALsizei"; возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(450,5): warning C4267: аргумент: преобразование из "size_t" в "ALsizei"; возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(647,20): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(697,41): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(699,42): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(701,38): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(703,39): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(718,17): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(719,17): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(723,19): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(724,19): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(726,13): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(727,13): warning C4244: =: преобразование "double" в "float", возможна потеря данных
-E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp(735,31): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+  Entity.cpp
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Shader.h(57,44): warning C4101: e: неиспользованная локальная переменная
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Mesh.h(89,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+  Player.cpp
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Shader.h(57,44): warning C4101: e: неиспользованная локальная переменная
+E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Mesh.h(89,1): warning C4267: аргумент: преобразование из "size_t" в "GLsizei"; возможна потеря данных
+  Создание кода...
   OpenGLPAG.vcxproj -> E:\dz\6 sem\kartykonsoli\OpenGLPAG\Build\src\Debug\OpenGLPAG.exe

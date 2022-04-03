@@ -51,6 +51,7 @@ uniform float shininess;
 uniform DirLight dirLight;
 uniform PointLight pointLight;
 uniform SpotLight spotLights[NR_SPOT_LIGHTS];
+uniform vec3 color;
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
@@ -65,6 +66,8 @@ void main()
     vec3 result = CalcDirLight(dirLight, norm, viewDir);
     result += CalcPointLight(pointLight, norm, FragPos, viewDir);    
     // phase 3: spot light
+
+    result = color;
 
     FragColor =  vec4(result, 1.0);
 }

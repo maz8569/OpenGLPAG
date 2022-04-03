@@ -13,6 +13,24 @@
     <ClCompile Include="dr_wav_impl.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="GObject.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.h">
@@ -39,6 +57,19 @@
     <ClInclude Include="train.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="GObject.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\prog\OpenGLPAG\OpenGLPAG\src\CMakeLists.txt">
