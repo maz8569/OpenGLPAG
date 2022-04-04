@@ -29,12 +29,22 @@ namespace GameEngine {
 	struct SceneNode
 	{
 	public:
-		SceneNode() : m_dirty(true) { m_transform = Transform(); m_model = nullptr; color = { 1, 1, 1 }; }
-		explicit SceneNode(std::shared_ptr<Model> m) : m_model(m), m_dirty(true) { m_transform = Transform(); color = { 1, 1, 1 }; }
+		SceneNode() : m_dirty(true) { m_transform = Transform(); }
 
-		void add_child(std::shared_ptr<SceneNode>& child)
+		void add_child(std::shared_ptr<SceneNode> child)
 		{
 			m_children.push_back(child);
+			//child->add_parent();
+		}
+
+		void add_parent(std::shared_ptr<SceneNode> parent)
+		{
+			m_parent = parent;
+		}
+
+		std::shared_ptr<SceneNode> get_parent()
+		{
+			return m_parent;
 		}
 
 		void update(const Transform &parent_transform, bool dirty)
@@ -51,21 +61,6 @@ namespace GameEngine {
 			for (uint32_t i = 0; i < m_children.size(); ++i)
 			{
 				m_children[i]->update(m_transform, dirty);
-			}
-		}
-
-		void render(Shader shader)
-		{
-			shader.setMat4("model", m_transform.m_world_matrix);
-			if (m_model != nullptr)
-			{
-				shader.setVec3("color", color);
-				m_model->Draw(shader);
-			}
-
-			for (uint32_t i = 0; i < m_children.size(); ++i)
-			{
-				m_children[i]->render(shader);
 			}
 		}
 
@@ -97,27 +92,18 @@ namespace GameEngine {
 			m_transform.m_scale = newScale;
 			m_dirty = true;
 		}
+		virtual void render() {}
 
-		void set_color(glm::vec3 c)
+		std::vector<std::shared_ptr<SceneNode>> get_children()
 		{
-			color = c;
-		}
-
-		glm::vec3 get_color()
-		{
-			return color;
-		}
-
-		void setModel(std::shared_ptr<Model> model) {
-			m_model = model;
+			return m_children;
 		}
 
 	private:
 		std::vector<std::shared_ptr<SceneNode>> m_children;
+		std::shared_ptr<SceneNode> m_parent;
 		Transform m_transform;
 		bool m_dirty;
-		std::shared_ptr<Model> m_model;
-		glm::vec3 color;
 
 
 	};

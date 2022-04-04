@@ -4,7 +4,8 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <vector>
-//#include "GameObject.h"
+#include "GObject.h"
+#include "Player.h"
 
 namespace GameEngine {
     // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -24,7 +25,7 @@ namespace GameEngine {
 
 
     // An abstract camera class that processes input and calculates the corresponding Euler Angles, Vectors and Matrices for use in OpenGL
-    class Camera//: public GameObject
+    class Camera: public GObject
     {
     public:
         // camera Attributes
@@ -40,6 +41,12 @@ namespace GameEngine {
         float MovementSpeed;
         float MouseSensitivity;
         float Zoom;
+
+        float min_z = 8.f;
+        float max_z = 40.f;
+        std::shared_ptr<Player> player;
+        std::shared_ptr<Player> player2 = nullptr;
+
 
         // constructor with vectors
         Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
@@ -129,6 +136,17 @@ namespace GameEngine {
         float getYaw()
         {
             return Yaw;
+        }
+
+        virtual void Move()
+        {
+            if (player2 == nullptr)
+            {
+                Position = player->get_transform().m_position * 0.5f;
+                float distance = sqrtf(player->get_transform().m_position.x * player->get_transform().m_position.x + player->get_transform().m_position.y * player->get_transform().m_position.y) * 2;
+                distance = clamp(distance, min_z, max_z);
+                Position -= Front * distance;
+            }
         }
 
     private:
