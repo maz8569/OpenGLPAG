@@ -6,6 +6,7 @@
 #include <vector>
 #include "GObject.h"
 #include "Player.h"
+#include "Courier.h"
 
 namespace GameEngine {
     // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -42,10 +43,10 @@ namespace GameEngine {
         float MouseSensitivity;
         float Zoom;
 
-        float min_z = 8.f;
+        float min_z = 10.f;
         float max_z = 40.f;
         std::shared_ptr<Player> player;
-        std::shared_ptr<Player> player2 = nullptr;
+        std::shared_ptr<Courier> courier = nullptr;
 
 
         // constructor with vectors
@@ -140,13 +141,22 @@ namespace GameEngine {
 
         virtual void Move()
         {
-            if (player2 == nullptr)
+            glm::vec3 second;
+            if (courier == nullptr)
             {
-                Position = player->get_transform().m_position * 0.5f;
-                float distance = sqrtf(player->get_transform().m_position.x * player->get_transform().m_position.x + player->get_transform().m_position.y * player->get_transform().m_position.y) * 2;
-                distance = clamp(distance, min_z, max_z);
-                Position -= Front * distance;
+                second = { 0, 0, 0 };
             }
+            else
+            {
+                second = courier->get_transform().m_position;
+            }
+
+            Position = (player->get_transform().m_position + second) * 0.5f;
+            float x = player->get_transform().m_position.x - second.x;
+            float y = player->get_transform().m_position.y - second.y;
+            float distance = sqrtf( x * x + y * y) * 2;
+            distance = clamp(distance, min_z, max_z);
+            Position -= Front * distance;
         }
 
     private:

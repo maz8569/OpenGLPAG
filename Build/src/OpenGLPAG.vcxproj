@@ -373,14 +373,24 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="Component.cpp" />
+    <ClCompile Include="Courier.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GObject.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Scene.cpp" />
+    <ClInclude Include="AABB.h" />
+    <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="Component.h" />
+    <ClInclude Include="Courier.h" />
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.h" />
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_opengl3.h" />
     <ClCompile Include="dr_wav_impl.cpp" />
@@ -393,6 +403,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneGraph.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="train.h" />
