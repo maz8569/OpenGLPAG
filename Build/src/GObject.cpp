@@ -4,10 +4,12 @@ GameEngine::GObject::GObject(): SceneNode(), m_color({1, 1, 1})
 {
 }
 
-GameEngine::GObject::GObject(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader): m_model(model), m_shader(shader), SceneNode(), m_color({ 1, 1, 1 })
+GameEngine::GObject::GObject(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Collision> colMan): m_model(model), m_shader(shader), SceneNode(), m_color({ 1, 1, 1 })
 {
 	m_aabb = std::make_shared<AABB>(generateAABB(model));
+	colMan->AddAABB(m_aabb);
 	std::cout << m_aabb->center.x << " " << m_aabb->center.y << " " << m_aabb->center.z << " " << std::endl;
+	offset = m_aabb->center;
 	std::cout << m_aabb->extents.x << " " << m_aabb->extents.y << " " << m_aabb->extents.z << " " << std::endl;
 	float vertices[] = {
 		m_aabb->center.x + m_aabb->extents.x, m_aabb->center.y + m_aabb->extents.y, m_aabb->center.z + m_aabb->extents.z,
@@ -79,7 +81,15 @@ void GameEngine::GObject::render()
 
 void GameEngine::GObject::Move()
 {
+	MoveColliders();
 }
+
+void GameEngine::GObject::MoveColliders()
+{
+	m_aabb->center = get_transform().m_position + offset;
+}
+
+
 
 void GameEngine::GObject::set_render_AABB(bool set)
 {

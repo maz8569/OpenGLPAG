@@ -375,7 +375,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Courier.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -388,7 +387,6 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Collision.h" />
-    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Courier.h" />
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.h" />

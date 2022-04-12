@@ -34,10 +34,15 @@
     <ClCompile Include="Component.cpp">
       <Filter>sources</Filter>
     </ClCompile>
-    <ClCompile Include="AABB.cpp" />
-    <ClCompile Include="Courier.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="AABB.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Courier.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.h">
@@ -85,10 +90,15 @@
     <ClInclude Include="Entity.h">
       <Filter>sources</Filter>
     </ClInclude>
-    <ClInclude Include="AABB.h" />
-    <ClInclude Include="Courier.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="CollisionManager.h" />
+    <ClInclude Include="Scene.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="AABB.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Courier.h">
+      <Filter>sources</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\prog\OpenGLPAG\OpenGLPAG\src\CMakeLists.txt">

@@ -1,6 +1,6 @@
 #include "Entity.h"
 
-GameEngine::Entity::Entity(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader) : GObject(model, shader)
+GameEngine::Entity::Entity(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Collision> colMan) : GObject(model, shader, colMan)
 {
 }
 

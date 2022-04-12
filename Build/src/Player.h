@@ -15,7 +15,7 @@ namespace GameEngine {
 		std::shared_ptr<InputManager> inputManager;
 		
 	public:
-		Player(std::shared_ptr<InputManager> inputManager, std::shared_ptr<Model> model, std::shared_ptr<Shader> shader);
+		Player(std::shared_ptr<InputManager> inputManager, std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Collision> colMan);
 
 		virtual void render();
 		virtual void Move();

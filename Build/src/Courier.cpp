@@ -1,6 +1,6 @@
 #include "Courier.h"
 
-GameEngine::Courier::Courier(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader) : Entity(model, shader)
+GameEngine::Courier::Courier(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Collision> colMan) : Entity(model, shader, colMan)
 {
 
 }
@@ -16,4 +16,5 @@ void GameEngine::Courier::Move()
 		speed *= -1;
 	get_transform().m_position.y += 0.01 * speed;
 	update(get_parent()->get_transform(), true);
+	Entity::Move();
 }

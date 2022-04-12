@@ -1,6 +1,6 @@
 #include "Player.h"
 
-GameEngine::Player::Player(std::shared_ptr<InputManager> inputManager, std::shared_ptr<Model> model, std::shared_ptr<Shader> shader) : inputManager(inputManager), Entity(model, shader) {}
+GameEngine::Player::Player(std::shared_ptr<InputManager> inputManager, std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Collision> colMan) : inputManager(inputManager), Entity(model, shader, colMan) {}
 
 void GameEngine::Player::render()
 {
@@ -18,4 +18,6 @@ void GameEngine::Player::Move()
     get_transform().m_position.y += currentSpeed * 0.005;
 
     update(get_parent()->get_transform(), true);
+
+    Entity::Move();
 }
