@@ -73,7 +73,7 @@ void main()
     //if(pointLight.ambient != vec3(0, 0, 0))
     //    result += CalcPointLight(pointLight, norm, FragPos, viewDir);    
     // phase 3: spot light
-    result *= color;
+    //result *= color;
     FragColor =  vec4(result, 1.0);
 }
 

@@ -43,6 +43,9 @@
     <ClCompile Include="Scene.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.h">
@@ -97,6 +100,9 @@
       <Filter>sources</Filter>
     </ClInclude>
     <ClInclude Include="Courier.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowManager.h">
       <Filter>sources</Filter>
     </ClInclude>
   </ItemGroup>

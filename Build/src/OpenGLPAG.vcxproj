@@ -377,6 +377,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Courier.cpp" />
+    <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GObject.cpp" />
     <ClCompile Include="InputManager.cpp" />
@@ -389,6 +390,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Courier.h" />
+    <ClInclude Include="WindowManager.h" />
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.h" />
     <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_opengl3.h" />
     <ClCompile Include="dr_wav_impl.cpp" />
