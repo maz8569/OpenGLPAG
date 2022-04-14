@@ -2,7 +2,7 @@
 
 GameEngine::WindowManager::WindowManager()
 {
-	createWindow();
+	//createWindow();
 }
 
 GameEngine::WindowManager::~WindowManager()
@@ -10,7 +10,7 @@ GameEngine::WindowManager::~WindowManager()
 	closeWindow();
 }
 
-void GameEngine::WindowManager::createWindow()
+int GameEngine::WindowManager::createWindow()
 {
     const char* glsl_version = "#version 460";
     // glfw: initialize and configure
@@ -22,7 +22,7 @@ void GameEngine::WindowManager::createWindow()
 
     // glfw window creation
     // --------------------
-    /*
+    
     window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, name.c_str(), NULL, NULL);
     if (window == NULL)
     {
@@ -31,10 +31,6 @@ void GameEngine::WindowManager::createWindow()
         return -1;
     }
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-    */
 }
 
 void GameEngine::WindowManager::updateWindow()

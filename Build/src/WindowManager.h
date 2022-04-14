@@ -17,7 +17,7 @@ namespace GameEngine {
 		WindowManager();
 		~WindowManager();
 
-		void createWindow();
+		int createWindow();
 		void updateWindow();
 		void closeWindow();
 	};

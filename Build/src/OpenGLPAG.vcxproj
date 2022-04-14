@@ -391,12 +391,12 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Component.h" />
     <ClInclude Include="Courier.h" />
     <ClInclude Include="WindowManager.h" />
-    <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.h" />
-    <ClInclude Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_opengl3.h" />
+    <ClInclude Include="imgui_impl_glfw.h" />
+    <ClInclude Include="imgui_impl_opengl3.h" />
     <ClCompile Include="dr_wav_impl.cpp" />
-    <ClCompile Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_glfw.cpp" />
-    <ClCompile Include="E:\prog\OpenGLPAG\OpenGLPAG\src\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="E:\prog\OpenGLPAG\OpenGLPAG\src\main.cpp" />
+    <ClCompile Include="imgui_impl_glfw.cpp" />
+    <ClCompile Include="imgui_impl_opengl3.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="GObject.h" />
     <ClInclude Include="InputManager.h" />
