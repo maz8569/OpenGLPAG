@@ -3,6 +3,8 @@
 #include <glad/glad.h>
 
 namespace GameEngine {
+
+
 	struct FrameBufferConfig {
 
 	};
@@ -10,6 +12,8 @@ namespace GameEngine {
 	class FrameBuffer
 	{
 	private:
+		GLuint ID;
+			
 	public:
 
 	};

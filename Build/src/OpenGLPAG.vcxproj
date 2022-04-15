@@ -378,8 +378,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Courier.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
     <ClCompile Include="Json.cpp" />
     <ClCompile Include="MasterRenderer.cpp" />
+    <ClCompile Include="Ray.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="Entity.cpp" />
@@ -394,8 +396,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Courier.h" />
+    <ClInclude Include="FrameBuffer.h" />
     <ClInclude Include="Json.h" />
     <ClInclude Include="MasterRenderer.h" />
+    <ClInclude Include="Ray.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="WindowManager.h" />

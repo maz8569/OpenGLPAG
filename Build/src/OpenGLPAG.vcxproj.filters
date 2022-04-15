@@ -58,6 +58,12 @@
     <ClCompile Include="Json.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="Ray.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameBuffer.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -127,6 +133,12 @@
       <Filter>sources</Filter>
     </ClInclude>
     <ClInclude Include="Json.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Ray.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameBuffer.h">
       <Filter>sources</Filter>
     </ClInclude>
   </ItemGroup>

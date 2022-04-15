@@ -22,6 +22,8 @@
 #include <Courier.h>
 #include "WindowManager.h"
 #include "TextRenderer.h"
+#include "Ray.h"
+#include "Scene.h"
 
 using namespace GameEngine;
 
@@ -285,20 +287,20 @@ void RenderScene(std::shared_ptr<Shader> shader)
     courier->render();
 
     shader->setInt("texture1", 0);
-    shader->setMat4("model", spunkt->get_transform().m_world_matrix);
     glActiveTexture(GL_TEXTURE0);
 
-    glBindTexture(GL_TEXTURE_2D, texture1);
-
     glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
 
     shader->setMat4("model", twod->get_transform().m_world_matrix);
     glBindTexture(GL_TEXTURE_2D, traincubesTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     shader->setMat4("model", twod2->get_transform().m_world_matrix);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    glBindTexture(GL_TEXTURE_2D, texture1);
+    shader->setMat4("model", spunkt->get_transform().m_world_matrix);
+
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -450,7 +452,7 @@ int main()
     // Create buffers that hold our sound data; these are shared between contexts and ar defined at a device level
     ReadWavData monoData;
     {
-        drwav_int16* pSampleData = drwav_open_file_and_read_pcm_frames_s16("Sounds/TestSound.wav", &monoData.channels, &monoData.sampleRate, &monoData.totalPCMFrameCount, nullptr);
+        drwav_int16* pSampleData = drwav_open_file_and_read_pcm_frames_s16("res/sounds/TestSound.wav", &monoData.channels, &monoData.sampleRate, &monoData.totalPCMFrameCount, nullptr);
         if (pSampleData == NULL) {
             std::cerr << "failed to load audio file" << std::endl;
             drwav_free(pSampleData, nullptr); //todo use raii to clean this up
@@ -476,7 +478,7 @@ int main()
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ReadWavData stereoData;
     {
-        drwav_int16* pSampleData = drwav_open_file_and_read_pcm_frames_s16("Sounds/TestSound.wav", &stereoData.channels, &stereoData.sampleRate, &stereoData.totalPCMFrameCount, nullptr);
+        drwav_int16* pSampleData = drwav_open_file_and_read_pcm_frames_s16("res/sounds/TestSound.wav", &stereoData.channels, &stereoData.sampleRate, &stereoData.totalPCMFrameCount, nullptr);
         if (pSampleData == NULL) {
             std::cerr << "failed to load audio file" << std::endl;
             return -1;
@@ -548,7 +550,7 @@ int main()
         return -1;
     }
     
-    textRenderer = CreateRef<TextRenderer>("Fonts/PressStart2P.ttf", "res/shaders/GUI.vert", "res/shaders/GUI.frag");
+    textRenderer = CreateRef<TextRenderer>("res/fonts/PressStart2P.ttf", "res/shaders/GUI.vert", "res/shaders/GUI.frag");
     if (!textRenderer->success)
     {
         return -1;
@@ -652,7 +654,7 @@ int main()
     twod = std::make_shared<SceneNode>(SceneNode());
     twod2 = std::make_shared<SceneNode>(SceneNode());
     //spunkt->set_local_scale({ 0.1, 0.1, 0.1 });
-    spunkt->set_local_position({ 0, 0, -2 });
+    spunkt->set_local_position({ 0, 0, -6 });
     spunkt->set_local_scale({ 20, 20, 1 });
     twodOrbit->set_local_position({ 0, 0, 0 });
     twodOrbit->set_local_rotation({ 0, 0, 0 });
