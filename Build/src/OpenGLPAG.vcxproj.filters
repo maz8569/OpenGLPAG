@@ -46,6 +46,18 @@
     <ClCompile Include="imgui_impl_opengl3.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="MasterRenderer.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="TextRenderer.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Json.cpp">
+      <Filter>sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -103,6 +115,18 @@
       <Filter>sources</Filter>
     </ClInclude>
     <ClInclude Include="imgui_impl_opengl3.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="typedefs.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="MasterRenderer.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="TextRenderer.h">
+      <Filter>sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Json.h">
       <Filter>sources</Filter>
     </ClInclude>
   </ItemGroup>

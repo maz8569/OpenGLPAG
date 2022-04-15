@@ -14,41 +14,16 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "SceneGraph.h"
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <dr_wav.h>
-#include <rapidjson/document.h>     // rapidjson's DOM-style API
-#include <rapidjson/prettywriter.h> // for stringify JSON
-#include <ft2build.h>
+#include "AudioManager.h"
+#include "Json.h"
 #include "InputManager.h"
 #include "Player.h"
 #include "Collision.h"
 #include <Courier.h>
 #include "WindowManager.h"
-#include FT_FREETYPE_H
+#include "TextRenderer.h"
 
 using namespace GameEngine;
-
-#define OpenAL_ErrorCheck(message)\
-{\
-	ALenum error = alGetError();\
-	if( error != AL_NO_ERROR)\
-	{\
-		std::cerr << "OpenAL Error: " << error << " with call for " << #message << std::endl;\
-	}\
-}
-
-struct Character {
-    unsigned int TextureID;  // ID handle of the glyph texture
-    glm::ivec2   Size;       // Size of glyph
-    glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
-    unsigned int Advance;    // Offset to advance to next glyph
-};
-std::map<char, Character> Characters;
-
-#define alec(FUNCTION_CALL)\
-FUNCTION_CALL;\
-OpenAL_ErrorCheck(FUNCTION_CALL)
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -56,7 +31,6 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 unsigned int loadTexture(const char* path);
 unsigned int loadCubemap(vector<std::string> faces);
-void RenderText(std::shared_ptr<Shader> s, std::string text, float x, float y, float scale, glm::vec3 color);
 void renderQuad();
 
 // settings
@@ -77,7 +51,6 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 float ftime = 0.0f;
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 lightPos(0.0f, 0.0f, -1.0f);
@@ -89,24 +62,26 @@ glm::mat4 punktLightpos;
 
 glm::mat4 lightProjection, lightView;
 glm::mat4 lightSpaceMatrix;
-float near_plane = 1.0f, far_plane = 7.5f;
+float near_plane = 0.0f, far_plane = 7.5f;
 unsigned int texture1, texture2, traincubesTexture;
 
-GLFWwindow* window = nullptr;
 std::shared_ptr<Shader> ourShader = nullptr;
 //std::shared_ptr<Shader> lightSourceShader = nullptr;
-std::shared_ptr<Shader> GUIShader = nullptr;
 std::shared_ptr<Shader> shadowMap = nullptr;
 std::shared_ptr<Shader> debugDepth = nullptr;
 
 std::shared_ptr<Collision> colMan = nullptr;
+std::shared_ptr<WindowManager> windowManager = nullptr;
+Ref<AudioManager> audioManager = nullptr;
+Ref<TextRenderer> textRenderer = nullptr;
+Ref<Json> jsonParser = nullptr;
 
 int fps = 0;
 
 double frame_time = 1.0 / 60.0;
 glm::vec3 p_pos = { 1, 0, 1 };
 glm::mat4 model_s;
-glm::mat4 ortho;
+//glm::mat4 ortho;
 
 int shinyyy = 32;
 
@@ -134,7 +109,6 @@ std::shared_ptr<Courier> courier;
 
 unsigned int VBO, VAO;
 unsigned int lightSource_VBO, lightSource_VAO;
-unsigned int GUI_VBO, GUI_VAO;
 
 unsigned int depthMapFBO, depthMap;
 
@@ -243,7 +217,7 @@ float a = 0.0f;
 
 void input()
 {
-    processInput(window);
+    processInput(windowManager->window);
     view = camera.GetViewMatrix();
     inputManager->getInput();
 
@@ -424,39 +398,24 @@ void render()
 
 void render_gui()
 {
-    //GUIShader->use();
-    //GUIShader->setMat4("projection", ortho);
-    //RenderText(GUIShader, "Score: " + std::to_string(inputManager->getHorizontal()) + " " + std::to_string(inputManager->getVertical()), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
+    textRenderer->RenderText("Position " + std::to_string(player->get_transform().m_position.x) + " " + std::to_string(player->get_transform().m_position.y), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
 }
 
 int main()
 {
     const char* glsl_version = "#version 460";
-    // glfw: initialize and configure
-    // ------------------------------
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    windowManager = std::make_shared<WindowManager>();
 
-    // glfw window creation
-    // --------------------
-    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "LearnOpenGL", NULL, NULL);
-    if (window == NULL)
-    {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
+    if (windowManager->createWindow() == -1)
         return -1;
-    }
-    glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetScrollCallback(window, scroll_callback);
-    inputManager = std::make_shared<InputManager>(window);
+
+    glfwSetFramebufferSizeCallback(windowManager->window, framebuffer_size_callback);
+    glfwSetCursorPosCallback(windowManager->window, mouse_callback);
+    glfwSetScrollCallback(windowManager->window, scroll_callback);
+    inputManager = std::make_shared<InputManager>(windowManager->window);
     colMan = std::make_shared<Collision>();
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    windowManager->freeCursor();
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -477,58 +436,18 @@ int main()
     std::shared_ptr<Model> bu = std::make_shared<Model>(Model("res/models/statek/untitled.obj"));
     std::shared_ptr<Model> scene = std::make_shared<Model>(Model("res/models/scene/scene.obj"));
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // find the default audio device
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const ALCchar* defaultDeviceString = alcGetString(/*device*/nullptr, ALC_DEFAULT_DEVICE_SPECIFIER);
-    ALCdevice* device = alcOpenDevice(defaultDeviceString);
-    if (!device)
-    {
-        std::cerr << "failed to get the default device for OpenAL" << std::endl;
-        return -1;
-    }
-    std::cout << "OpenAL Device: " << alcGetString(device, ALC_DEVICE_SPECIFIER) << std::endl;
+    audioManager = CreateRef<AudioManager>();
     //OpenAL_ErrorCheck(device);
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Create an OpenAL audio context from the device
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ALCcontext* context = alcCreateContext(device, /*attrlist*/ nullptr);
     //OpenAL_ErrorCheck(context);
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Activate this context so that OpenAL state modifications are applied to the context
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    if (!alcMakeContextCurrent(context))
+    if (!audioManager->success)
     {
-        std::cerr << "failed to make the OpenAL context the current context" << std::endl;
         return -1;
     }
     //OpenAL_ErrorCheck("Make context current");
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Create a listener in 3d space (ie the player); (there always exists as listener, you just configure data on it)
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    alec(alListener3f(AL_POSITION, 0.f, 0.f, 0.f));
-    alec(alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f));
-    ALfloat forwardAndUpVectors[] = {
-        /*forward = */ 1.f, 0.f, 0.f,
-        /* up = */ 0.f, 1.f, 0.f
-    };
-    alec(alListenerfv(AL_ORIENTATION, forwardAndUpVectors));
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Create buffers that hold our sound data; these are shared between contexts and ar defined at a device level
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    struct ReadWavData
-    {
-        unsigned int channels = 0;
-        unsigned int sampleRate = 0;
-        drwav_uint64 totalPCMFrameCount = 0;
-        std::vector<uint16_t> pcmData;
-        drwav_uint64 getTotalSamples() { return totalPCMFrameCount * channels; }
-    };
     ReadWavData monoData;
     {
         drwav_int16* pSampleData = drwav_open_file_and_read_pcm_frames_s16("Sounds/TestSound.wav", &monoData.channels, &monoData.sampleRate, &monoData.totalPCMFrameCount, nullptr);
@@ -623,88 +542,20 @@ int main()
     alec(alGetSourcei(stereoSource, AL_SOURCE_STATE, &sourceState));
     //basically loop until we're done playing the mono sound source
 
-    ////////////////////////////////////////////////////////////////////////////
-    // 1. Parse a JSON text string to a document.
-
-    const char json[] = " { \"hello\" : \"world\", \"t\" : true , \"f\" : false, \"n\": null, \"i\":123, \"pi\": 3.1416, \"a\":[1, 2, 3, 4] } ";
-    printf("Original JSON:\n %s\n", json);
-
-    rapidjson::Document document;  // Default template parameter uses UTF8 and MemoryPoolAllocator.
-
-    if (document.Parse(json).HasParseError())
-        return 1;
-
-    FT_Library ft;
-    if (FT_Init_FreeType(&ft))
+    jsonParser = CreateRef<Json>();
+    if (jsonParser->print() == 1)
     {
-        std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
         return -1;
     }
-
-    FT_Face face;
-    if (FT_New_Face(ft, "Fonts/PressStart2P.ttf", 0, &face))
+    
+    textRenderer = CreateRef<TextRenderer>("Fonts/PressStart2P.ttf", "res/shaders/GUI.vert", "res/shaders/GUI.frag");
+    if (!textRenderer->success)
     {
-        std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
         return -1;
     }
-
-    FT_Set_Pixel_Sizes(face, 0, 48);
-
-    if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
-    {
-        std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-        return -1;
-    }
-
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // disable byte-alignment restriction
-
-    for (unsigned char c = 0; c < 128; c++)
-    {
-        // load character glyph 
-        if (FT_Load_Char(face, c, FT_LOAD_RENDER))
-        {
-            std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-            continue;
-        }
-        // generate texture
-        unsigned int texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RED,
-            face->glyph->bitmap.width,
-            face->glyph->bitmap.rows,
-            0,
-            GL_RED,
-            GL_UNSIGNED_BYTE,
-            face->glyph->bitmap.buffer
-        );
-        // set texture options
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // now store character for later use
-        Character character = {
-            texture,
-            glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-            glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-            face->glyph->advance.x
-        };
-        Characters.insert(std::pair<char, Character>(c, character));
-    }
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    FT_Done_Face(face);
-    FT_Done_FreeType(ft);
 
     ourShader = std::make_shared<Shader>(Shader("res/shaders/basic.vert", "res/shaders/basic.frag"));
     //lightSourceShader = std::make_shared<Shader>(Shader("res/shaders/lightsource.vert", "res/shaders/lightsource.frag"));
-    GUIShader = std::make_shared<Shader>(Shader("res/shaders/GUI.vert", "res/shaders/GUI.frag"));
     shadowMap = std::make_shared<Shader>("res/shaders/shadowmapping.vert", "res/shaders/shadowmapping.frag");
     debugDepth = std::make_shared<Shader>("res/shaders/debugdepth.vert", "res/shaders/debugdepth.frag");
     activate_lights(ourShader);
@@ -719,13 +570,13 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    ortho = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
+    //ortho = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(windowManager->window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 
     // Setup style
@@ -792,16 +643,6 @@ int main()
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    glGenVertexArrays(1, &GUI_VAO);
-    glGenBuffers(1, &GUI_VBO);
-    glBindVertexArray(GUI_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, GUI_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
     glBindVertexArray(0);
 
     root = std::make_shared<SceneNode>(SceneNode());
@@ -822,7 +663,6 @@ int main()
     root->add_child(twodOrbit);
     twodOrbit->add_child(twod);
     twodOrbit->add_child(twod2);
-
 
     player = std::make_shared<Player>(inputManager, b, ourShader, colMan);
     courier = std::make_shared<Courier>(bu, ourShader, colMan);
@@ -854,16 +694,13 @@ int main()
 
     double last_time = glfwGetTime();
     double unprocessed_time = 0.0;
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(windowManager->window))
     {
-        // input
-        // -----
         current_time = glfwGetTime();
         passed_time = current_time - last_time;
 
         last_time = current_time;
         unprocessed_time += passed_time;
-
 
         input();
 
@@ -873,8 +710,6 @@ int main()
             unprocessed_time -= frame_time;
 
             update(frame_time);
-            alec(alGetSourcei(stereoSource, AL_SOURCE_STATE, &sourceState));
-
         }
 
         
@@ -884,8 +719,7 @@ int main()
             render();
             render_gui();
 
-            glfwPollEvents();
-            glfwSwapBuffers(window);
+            windowManager->updateWindow();
         } 
     }
 
@@ -894,16 +728,15 @@ int main()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    glfwTerminate();
+    windowManager->closeWindow();
 
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
 
     glDeleteVertexArrays(1, &lightSource_VAO);
     glDeleteBuffers(1, &lightSource_VBO);
-
-    glDeleteVertexArrays(1, &GUI_VAO);
-    glDeleteBuffers(1, &GUI_VBO);
+    
+    textRenderer->clean();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // clean up our resources!
@@ -912,9 +745,7 @@ int main()
     alec(alDeleteSources(1, &stereoSource));
     alec(alDeleteBuffers(1, &monoSoundBuffer));
     alec(alDeleteBuffers(1, &stereoSoundBuffer));
-    alcMakeContextCurrent(nullptr);
-    alcDestroyContext(context);
-    alcCloseDevice(device);
+    audioManager->clean();
 
     return 0;
 }
@@ -1036,50 +867,6 @@ unsigned int loadCubemap(vector<std::string> faces)
     glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
     return textureID;
-}
-
-void RenderText(std::shared_ptr<Shader> s, std::string text, float x, float y, float scale, glm::vec3 color)
-{
-    // activate corresponding render state	
-    s->use();
-    glUniform3f(glGetUniformLocation(s->ID, "textColor"), color.x, color.y, color.z);
-    glActiveTexture(GL_TEXTURE0);
-    glBindVertexArray(GUI_VAO);
-
-    // iterate through all characters
-    std::string::const_iterator c;
-    for (c = text.begin(); c != text.end(); c++)
-    {
-        Character ch = Characters[*c];
-
-        float xpos = x + ch.Bearing.x * scale;
-        float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-
-        float w = ch.Size.x * scale;
-        float h = ch.Size.y * scale;
-        // update VBO for each character
-        float vertices[6][4] = {
-            { xpos,     ypos + h,   0.0f, 0.0f },
-            { xpos,     ypos,       0.0f, 1.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
-
-            { xpos,     ypos + h,   0.0f, 0.0f },
-            { xpos + w, ypos,       1.0f, 1.0f },
-            { xpos + w, ypos + h,   1.0f, 0.0f }
-        };
-        // render glyph texture over quad
-        glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-        // update content of VBO memory
-        glBindBuffer(GL_ARRAY_BUFFER, GUI_VBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        // render quad
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
-    }
-    glBindVertexArray(0);
-    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 unsigned int quadVAO = 0;

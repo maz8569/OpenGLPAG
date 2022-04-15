@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <memory>
+#include "typedefs.h"
 #include <vector>
 #include <SceneGraph.h>
 
@@ -9,11 +9,11 @@ namespace GameEngine {
 	{
 	private:
 		std::string name;
-		std::shared_ptr<SceneNode> root;
-		std::vector<SceneNode> GObjects;
+		Ref<SceneNode> root;
+		std::vector<Ref<SceneNode>> GObjects;
 
 	public:
-
+		Scene();
 	};
 }
 

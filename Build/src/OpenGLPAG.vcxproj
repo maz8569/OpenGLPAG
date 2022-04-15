@@ -137,8 +137,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
-      <ImportLibrary>E:/prog/OpenGLPAG/OpenGLPAG/Build/src/Debug/OpenGLPAG.lib</ImportLibrary>
-      <ProgramDataBaseFile>E:/prog/OpenGLPAG/OpenGLPAG/Build/src/Debug/OpenGLPAG.pdb</ProgramDataBaseFile>
+      <ImportLibrary>../Debug/OpenGLPAG.lib</ImportLibrary>
+      <ProgramDataBaseFile>../Debug/OpenGLPAG.pdb</ProgramDataBaseFile>
       <SubSystem>Console</SubSystem>
     </Link>
     <ProjectReference>
@@ -374,9 +374,13 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="AudioManager.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Courier.cpp" />
+    <ClCompile Include="Json.cpp" />
+    <ClCompile Include="MasterRenderer.cpp" />
+    <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="WindowManager.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="GObject.cpp" />
@@ -390,6 +394,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Courier.h" />
+    <ClInclude Include="Json.h" />
+    <ClInclude Include="MasterRenderer.h" />
+    <ClInclude Include="TextRenderer.h" />
+    <ClInclude Include="typedefs.h" />
     <ClInclude Include="WindowManager.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
     <ClInclude Include="imgui_impl_opengl3.h" />

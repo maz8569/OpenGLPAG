@@ -12,7 +12,6 @@ GameEngine::WindowManager::~WindowManager()
 
 int GameEngine::WindowManager::createWindow()
 {
-    const char* glsl_version = "#version 460";
     // glfw: initialize and configure
     // ------------------------------
     glfwInit();
@@ -31,12 +30,27 @@ int GameEngine::WindowManager::createWindow()
         return -1;
     }
     glfwMakeContextCurrent(window);
+    return 0;
 }
 
 void GameEngine::WindowManager::updateWindow()
 {
+    glfwPollEvents();
+    glfwSwapBuffers(window);
 }
 
 void GameEngine::WindowManager::closeWindow()
 {
+    glfwTerminate();
+
+}
+
+void GameEngine::WindowManager::blockCursor()
+{
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void GameEngine::WindowManager::freeCursor()
+{
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
