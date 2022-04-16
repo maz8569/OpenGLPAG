@@ -22,6 +22,12 @@ namespace GameEngine {
 		void FixedUpdate();
 		void LateUpdate();
 		void Render();
+
+		virtual Ref<GObject> getObjectByName(const std::string& name);
+		virtual std::vector<Ref<GObject>> getAllObjects();
+		virtual std::vector<Ref<GObject>> getAllObjectsByName(const std::string& name);
+		virtual Ref<GObject> getObjectByID(unsigned int ID);
+
 	};
 }
 

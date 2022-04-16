@@ -21,10 +21,17 @@ void GameEngine::Collision::CollisionCheck()
 {
     if (collisions.size() > 1)
     {
-        if (TestAABBAABB(collisions[0], collisions[1]))
+        for (unsigned int i = 0; i < collisions.size(); i++)
         {
-            std::cout << "coll";
-
+            for (unsigned int j = i+1; j < collisions.size(); j++)
+            {
+                if (collisions[i]->collides(collisions[j]))
+                {
+                    std::cout << "coll";
+                }
+            }
         }
+        //if (TestAABBAABB(collisions[0], collisions[1]))
+
     }
 }

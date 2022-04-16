@@ -79,9 +79,14 @@ void GameEngine::GObject::render()
 	}
 }
 
-void GameEngine::GObject::Move()
+void GameEngine::GObject::Update()
 {
 	MoveColliders();
+}
+
+void GameEngine::GObject::reactOnCollision()
+{
+
 }
 
 void GameEngine::GObject::MoveColliders()

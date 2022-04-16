@@ -64,6 +64,7 @@
     <ClCompile Include="FrameBuffer.cpp">
       <Filter>sources</Filter>
     </ClCompile>
+    <ClCompile Include="Collider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -141,6 +142,7 @@
     <ClInclude Include="FrameBuffer.h">
       <Filter>sources</Filter>
     </ClInclude>
+    <ClInclude Include="Collider.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\prog\OpenGLPAG\OpenGLPAG\src\CMakeLists.txt">

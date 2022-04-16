@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <array>
-#include <memory>
+#include "typedefs.h"
 #include <Model.h>
 
 namespace GameEngine {
@@ -16,7 +16,13 @@ namespace GameEngine {
 
 		std::array<glm::vec3, 8> getVertice() const;
 
+		glm::vec3 max();
+		glm::vec3 min();
+
+		inline glm::vec3 testDepth(Ref<AABB> other) const;
+		bool collides(Ref<AABB> other) const;
 	};
 
 	AABB generateAABB(std::shared_ptr<Model> model);
+
 }

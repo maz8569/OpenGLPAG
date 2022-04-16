@@ -9,7 +9,7 @@ void GameEngine::Entity::render()
 	GObject::render();
 }
 
-void GameEngine::Entity::Move()
+void GameEngine::Entity::Update()
 {
-	GObject::Move();
+	GObject::Update();
 }

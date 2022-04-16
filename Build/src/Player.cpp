@@ -7,7 +7,7 @@ void GameEngine::Player::render()
     Entity::render();
 }
 
-void GameEngine::Player::Move()
+void GameEngine::Player::Update()
 {
     currentSpeed = speed * inputManager->getHorizontal();
 
@@ -19,5 +19,5 @@ void GameEngine::Player::Move()
 
     update(get_parent()->get_transform(), true);
 
-    Entity::Move();
+    Entity::Update();
 }

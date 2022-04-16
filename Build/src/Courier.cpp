@@ -10,11 +10,11 @@ void GameEngine::Courier::render()
 	Entity::render();
 }
 
-void GameEngine::Courier::Move()
+void GameEngine::Courier::Update()
 {
 	if (get_transform().m_position.y > 10 || get_transform().m_position.y < -10)
 		speed *= -1;
 	get_transform().m_position.y += 0.01 * speed;
 	update(get_parent()->get_transform(), true);
-	Entity::Move();
+	Entity::Update();
 }

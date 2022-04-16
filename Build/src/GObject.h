@@ -12,13 +12,17 @@ namespace GameEngine {
 	private:
 		//std::vector<std::shared_ptr<Collision>> collisions;
 		//std::shared_ptr<Plan> boundingVolume;
-		std::shared_ptr<Model> m_model;
-		std::shared_ptr<AABB> m_aabb;
+		Ref<Model> m_model;
+		Ref<AABB> m_aabb;
 		glm::vec3 m_color;
-		std::shared_ptr<Shader> m_shader;
+		Ref<Shader> m_shader;
 		bool render_AABB = false;
 		unsigned int VBO, VAO;
 		glm::vec3 offset;
+		std::string m_name;
+		std::string m_tag;
+		unsigned int ID;
+		static unsigned int ms_uiNextID;
 
 	public:
 		GObject();
@@ -30,13 +34,23 @@ namespace GameEngine {
 		glm::vec3 get_color();
 
 		void setModel(std::shared_ptr<Model> model);
+		Ref<AABB> getAABB() const;
 
 		virtual void render();
-		virtual void Move();
+		virtual void Update();
+
+		virtual void reactOnCollision();
 
 		void MoveColliders();
 
 		void set_render_AABB(bool set);
+
+		void setName(std::string name);
+		const std::string& getName() const;
+
+		unsigned int getID() const;
+		static unsigned int getNextID();
+
 	};
 }
 

@@ -24,6 +24,7 @@
 #include "TextRenderer.h"
 #include "Ray.h"
 #include "Scene.h"
+#include "FrameBuffer.h"
 
 using namespace GameEngine;
 
@@ -252,8 +253,8 @@ void update(float dt)
         ftime += dt;
     }
 
-    player->Move();
-    courier->Move();
+    player->Update();
+    courier->Update();
     camera.Move();
     colMan->CollisionCheck();
 }
@@ -291,12 +292,12 @@ void RenderScene(std::shared_ptr<Shader> shader)
 
     glBindVertexArray(VAO);
 
-    shader->setMat4("model", twod->get_transform().m_world_matrix);
+    //shader->setMat4("model", twod->get_transform().m_world_matrix);
     glBindTexture(GL_TEXTURE_2D, traincubesTexture);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    //glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    shader->setMat4("model", twod2->get_transform().m_world_matrix);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    //shader->setMat4("model", twod2->get_transform().m_world_matrix);
+    //glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glBindTexture(GL_TEXTURE_2D, texture1);
     shader->setMat4("model", spunkt->get_transform().m_world_matrix);
@@ -440,7 +441,6 @@ int main()
 
     audioManager = CreateRef<AudioManager>();
     //OpenAL_ErrorCheck(device);
-
     //OpenAL_ErrorCheck(context);
 
     if (!audioManager->success)

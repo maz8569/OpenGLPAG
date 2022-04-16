@@ -22,6 +22,39 @@ std::array<glm::vec3, 8> GameEngine::AABB::getVertice() const
 	return vertice;
 }
 
+glm::vec3 GameEngine::AABB::max()
+{
+	return center - extents[0] - extents[1] - extents[2];
+}
+
+glm::vec3 GameEngine::AABB::min()
+{
+	return center + extents[0] + extents[1] + extents[2];
+}
+
+glm::vec3 GameEngine::AABB::testDepth(Ref<AABB> other) const
+{
+	glm::vec3 result = glm::vec3();
+
+	for (int i = 0; i < 3; i++)
+	{
+		//if (abs(center[i] - other->center[i]) > (extents[i] + other->extents[i]))
+			//result[i] =
+	}
+	return result;
+}
+
+bool GameEngine::AABB::collides(Ref<AABB> other) const
+{
+	for (int i = 0; i < 3; i++)
+	{
+		if (abs(center[i] - other->center[i]) > (extents[i] + other->extents[i]))
+			return 0;
+	}
+	return 1;
+}
+
+
 GameEngine::AABB GameEngine::generateAABB(std::shared_ptr<Model> model)
 {
 	glm::vec3 minAABB = glm::vec3(std::numeric_limits<float>::max());

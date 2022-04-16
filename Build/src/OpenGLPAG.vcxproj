@@ -375,6 +375,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="AudioManager.cpp" />
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Collision.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Courier.cpp" />
@@ -393,6 +394,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="AudioManager.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Courier.h" />
