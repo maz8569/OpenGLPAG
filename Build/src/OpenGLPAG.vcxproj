@@ -85,7 +85,7 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">true</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>$(SolutionDir)src;$(SolutionDir)thirdparty\OpenAL\Include;$(SolutionDir)thirdparty\dr_lib;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)src;$(SolutionDir)thirdparty\OpenAL\Include;$(SolutionDir)thirdparty\dr_lib;$(SolutionDir)src\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)thirdparty\OpenAL\Build\Release;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -373,53 +373,53 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AABB.cpp" />
-    <ClCompile Include="AudioManager.cpp" />
-    <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="Collision.cpp" />
-    <ClCompile Include="Component.cpp" />
-    <ClCompile Include="Courier.cpp" />
-    <ClCompile Include="FrameBuffer.cpp" />
-    <ClCompile Include="Json.cpp" />
-    <ClCompile Include="MasterRenderer.cpp" />
-    <ClCompile Include="Ray.cpp" />
-    <ClCompile Include="TextRenderer.cpp" />
-    <ClCompile Include="WindowManager.cpp" />
-    <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="GObject.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="Model.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Scene.cpp" />
-    <ClInclude Include="AABB.h" />
-    <ClInclude Include="AudioManager.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Collider.h" />
-    <ClInclude Include="Collision.h" />
-    <ClInclude Include="Component.h" />
-    <ClInclude Include="Courier.h" />
-    <ClInclude Include="FrameBuffer.h" />
-    <ClInclude Include="Json.h" />
-    <ClInclude Include="MasterRenderer.h" />
-    <ClInclude Include="Ray.h" />
-    <ClInclude Include="TextRenderer.h" />
+    <ClCompile Include="src\Physics\Collisions\AABB.cpp" />
+    <ClCompile Include="src\Audio\AudioManager.cpp" />
+    <ClCompile Include="src\Physics\Collisions\Collider.cpp" />
+    <ClCompile Include="src\Physics\Collisions\Collision.cpp" />
+    <ClCompile Include="src\Scene\Component.cpp" />
+    <ClCompile Include="src\Scene\Courier.cpp" />
+    <ClCompile Include="src\Rendering\FrameBuffer.cpp" />
+    <ClCompile Include="src\Utils\Json.cpp" />
+    <ClCompile Include="src\Rendering\MasterRenderer.cpp" />
+    <ClCompile Include="src\Physics\RayCasting\Ray.cpp" />
+    <ClCompile Include="src\Rendering\TextRenderer.cpp" />
+    <ClCompile Include="src\Rendering\WindowManager.cpp" />
+    <ClCompile Include="src\Scene\Entity.cpp" />
+    <ClCompile Include="src\Scene\GObject.cpp" />
+    <ClCompile Include="src\Utils\InputManager.cpp" />
+    <ClCompile Include="src\Rendering\Model.cpp" />
+    <ClCompile Include="src\Scene\Player.cpp" />
+    <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClInclude Include="include\Physics\Collisions\AABB.h" />
+    <ClInclude Include="include\Audio\AudioManager.h" />
+    <ClInclude Include="include\Scene\Camera.h" />
+    <ClInclude Include="include\Physics\Collisions\Collider.h" />
+    <ClInclude Include="include\Physics\Collisions\Collision.h" />
+    <ClInclude Include="include\Scene\Component.h" />
+    <ClInclude Include="include\Scene\Courier.h" />
+    <ClInclude Include="include\Rendering\FrameBuffer.h" />
+    <ClInclude Include="include\Utils\Json.h" />
+    <ClInclude Include="include\Rendering\MasterRenderer.h" />
+    <ClInclude Include="include\Physics\RayCasting\Ray.h" />
+    <ClInclude Include="include\Rendering\TextRenderer.h" />
     <ClInclude Include="typedefs.h" />
-    <ClInclude Include="WindowManager.h" />
+    <ClInclude Include="include\Rendering\WindowManager.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
     <ClInclude Include="imgui_impl_opengl3.h" />
-    <ClCompile Include="dr_wav_impl.cpp" />
+    <ClCompile Include="src\Audio\dr_wav_impl.cpp" />
     <ClCompile Include="imgui_impl_glfw.cpp" />
     <ClCompile Include="imgui_impl_opengl3.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="GObject.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="Mesh.h" />
-    <ClInclude Include="Model.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="Scene.h" />
-    <ClInclude Include="SceneGraph.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="include\Scene\Entity.h" />
+    <ClInclude Include="include\Scene\GObject.h" />
+    <ClInclude Include="include\Utils\InputManager.h" />
+    <ClInclude Include="include\Rendering\Mesh.h" />
+    <ClInclude Include="include\Rendering\Model.h" />
+    <ClInclude Include="include\Scene\Player.h" />
+    <ClInclude Include="include\Scene\Scene.h" />
+    <ClInclude Include="include\Scene\SceneGraph.h" />
+    <ClInclude Include="include\Rendering\Shader.h" />
     <ClInclude Include="train.h" />
   </ItemGroup>
   <ItemGroup>

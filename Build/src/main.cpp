@@ -11,20 +11,20 @@
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
 #include <stb_image.h>
-#include "Shader.h"
-#include "Camera.h"
-#include "SceneGraph.h"
-#include "AudioManager.h"
-#include "Json.h"
-#include "InputManager.h"
-#include "Player.h"
-#include "Collision.h"
-#include <Courier.h>
-#include "WindowManager.h"
-#include "TextRenderer.h"
-#include "Ray.h"
-#include "Scene.h"
-#include "FrameBuffer.h"
+#include "Rendering/Shader.h"
+#include "Scene/Camera.h"
+#include "Scene/SceneGraph.h"
+#include "Audio/AudioManager.h"
+#include "Utils/Json.h"
+#include "Utils/InputManager.h"
+#include "Scene/Player.h"
+#include "Physics/Collisions/Collision.h"
+#include <Scene/Courier.h>
+#include "Rendering/WindowManager.h"
+#include "Rendering/TextRenderer.h"
+#include "Physics/RayCasting/Ray.h"
+#include "Scene/Scene.h"
+#include "Rendering/FrameBuffer.h"
 
 using namespace GameEngine;
 
