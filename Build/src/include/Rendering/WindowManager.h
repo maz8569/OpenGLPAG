@@ -9,10 +9,12 @@ namespace GameEngine {
 	class WindowManager
 	{
 	public:
+		void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
-		const unsigned int SCR_WIDTH = 1920;
-		const unsigned int SCR_HEIGHT = 1080;
+		static const unsigned int SCR_WIDTH = 1920;
+		static const unsigned int SCR_HEIGHT = 1080;
 		GLFWwindow* window = nullptr;
+
 		//name of the game
 		std::string name = "Package Rush";
 

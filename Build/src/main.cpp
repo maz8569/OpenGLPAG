@@ -25,11 +25,13 @@
 #include "Physics/RayCasting/Ray.h"
 #include "Scene/Scene.h"
 #include "Rendering/FrameBuffer.h"
+#include "Rendering/Shape.h"
+#include "Physics/RayCasting/MousePicker.h"
 
 using namespace GameEngine;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+//void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 unsigned int loadTexture(const char* path);
@@ -42,7 +44,7 @@ const unsigned int SCR_HEIGHT = 1080;
 
 const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Ref<Camera> camera;
 float lastX = (float)SCR_WIDTH / 2.0;
 float lastY = (float)SCR_HEIGHT / 2.0;
 bool firstMouse = true;
@@ -56,7 +58,7 @@ float ftime = 0.0f;
 
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 lightPos(0.0f, 0.0f, -1.0f);
+glm::vec3 lightPos(0.0f, -4.0f, 0.0f);
 
 glm::vec3 direction;
 
@@ -78,6 +80,7 @@ std::shared_ptr<WindowManager> windowManager = nullptr;
 Ref<AudioManager> audioManager = nullptr;
 Ref<TextRenderer> textRenderer = nullptr;
 Ref<Json> jsonParser = nullptr;
+Ref<MousePicker> mousePicker = nullptr;
 
 int fps = 0;
 
@@ -110,7 +113,8 @@ std::shared_ptr<InputManager> inputManager = nullptr;
 std::shared_ptr<Player> player;
 std::shared_ptr<Courier> courier;
 
-unsigned int VBO, VAO;
+//unsigned int VBO, VAO;
+Ref<Shape> quad;
 unsigned int lightSource_VBO, lightSource_VAO;
 
 unsigned int depthMapFBO, depthMap;
@@ -221,7 +225,7 @@ float a = 0.0f;
 void input()
 {
     processInput(windowManager->window);
-    view = camera.GetViewMatrix();
+    view = camera->GetViewMatrix();
     inputManager->getInput();
 
 }
@@ -255,14 +259,15 @@ void update(float dt)
 
     player->Update();
     courier->Update();
-    camera.Move();
+    camera->Move();
     colMan->CollisionCheck();
+    mousePicker->update();
 }
 
 void activate_lights(std::shared_ptr<Shader> shader)
 {
     shader->setFloat("shininess", shinyyy);
-    shader->setVec3("viewPos", camera.Position);
+    shader->setVec3("viewPos", camera->Position);
     /*
     glm::vec3 position = model_s * glm::vec4(1.0f);
     shader->setVec3("pointLight.position", {0, 2, -1});
@@ -290,7 +295,7 @@ void RenderScene(std::shared_ptr<Shader> shader)
     shader->setInt("texture1", 0);
     glActiveTexture(GL_TEXTURE0);
 
-    glBindVertexArray(VAO);
+    //glBindVertexArray(VAO);
 
     //shader->setMat4("model", twod->get_transform().m_world_matrix);
     glBindTexture(GL_TEXTURE_2D, traincubesTexture);
@@ -301,8 +306,8 @@ void RenderScene(std::shared_ptr<Shader> shader)
 
     glBindTexture(GL_TEXTURE_2D, texture1);
     shader->setMat4("model", spunkt->get_transform().m_world_matrix);
-
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    quad->Render(6);
+    //glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void render()
@@ -312,7 +317,7 @@ void render()
     glClearColor(0.8f, 0.8f, 1.f, 0.6f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
     // activate shader
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
     shadowMap->use();
     shadowMap->setMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -401,7 +406,8 @@ void render()
 
 void render_gui()
 {
-    textRenderer->RenderText("Position " + std::to_string(player->get_transform().m_position.x) + " " + std::to_string(player->get_transform().m_position.y), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
+    //textRenderer->RenderText("Position " + std::to_string(player->get_transform().m_position.x) + " " + std::to_string(player->get_transform().m_position.y), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
+    textRenderer->RenderText("Position " + std::to_string(inputManager->m_posx) + " " + std::to_string(inputManager->m_posy), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
 }
 
 int main()
@@ -413,10 +419,11 @@ int main()
         return -1;
 
     glfwSetFramebufferSizeCallback(windowManager->window, framebuffer_size_callback);
-    glfwSetCursorPosCallback(windowManager->window, mouse_callback);
+    //glfwSetCursorPosCallback(windowManager->window, );
     glfwSetScrollCallback(windowManager->window, scroll_callback);
     inputManager = std::make_shared<InputManager>(windowManager->window);
     colMan = std::make_shared<Collision>();
+
 
     windowManager->freeCursor();
 
@@ -432,6 +439,9 @@ int main()
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
     // build and compile our shader zprogram
     // ------------------------------------
 
@@ -555,6 +565,7 @@ int main()
     {
         return -1;
     }
+    camera = CreateRef<Camera>(Camera(glm::vec3(0.0f, 0.0f, 3.0f)));
 
     ourShader = std::make_shared<Shader>(Shader("res/shaders/basic.vert", "res/shaders/basic.frag"));
     //lightSourceShader = std::make_shared<Shader>(Shader("res/shaders/lightsource.vert", "res/shaders/lightsource.frag"));
@@ -595,7 +606,6 @@ int main()
     ourShader->setMat4("projection", projection);
     //instancedShader->setMat4("projection", projection);
     
-
     float a = 0;
     bool should_render = false;
 
@@ -627,25 +637,9 @@ int main()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    // normal attribute
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    glBindVertexArray(0);
+    quad = CreateRef<Shape>(Shape(vertices, sizeof(vertices), Coords::COORDSTEXTNORM));
+    //glGenVertexArrays(1, &VAO);
+    //glGenBuffers(1, &VBO);
 
     root = std::make_shared<SceneNode>(SceneNode());
     spunkt = std::make_shared<SceneNode>(SceneNode());
@@ -677,8 +671,11 @@ int main()
     courier->add_parent(root);
     root->update(root->get_transform(), true);
 
-    camera.player = player;
-    camera.courier = courier;
+    camera->player = player;
+    camera->courier = courier;
+
+    projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    mousePicker = CreateRef<MousePicker>(MousePicker(camera, projection, inputManager));
     // load and create a texture 
     // -------------------------
     stbi_set_flip_vertically_on_load(true);
@@ -732,8 +729,7 @@ int main()
 
     windowManager->closeWindow();
 
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    quad->clean();
 
     glDeleteVertexArrays(1, &lightSource_VAO);
     glDeleteBuffers(1, &lightSource_VBO);
@@ -775,8 +771,8 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-{
+//void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+//{
     /*
     if (firstMouse)
     {
@@ -792,7 +788,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
     lastY = ypos;
     camera.ProcessMouseMovement(xoffset, yoffset);
     */
-}
+//}
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------

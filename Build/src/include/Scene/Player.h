@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/glm.hpp>
 #include<Scene/Entity.h>
 #include "Utils/InputManager.h"
 
@@ -7,10 +8,11 @@ namespace GameEngine {
 	{
 	private:
 		float speed = 20;
-		float turnSpeed = 160;
+		float jumpHeight = 20;
+		float gravity = -50;
 
-		float currentSpeed = 0;
-		float currentTurnSpeed = 0;
+		glm::vec2 currentSpeed = { 0, 0 };
+		float jumpPower = 0;
 
 		std::shared_ptr<InputManager> inputManager;
 		
@@ -19,6 +21,7 @@ namespace GameEngine {
 
 		virtual void render();
 		virtual void Update();
+		void jump();
 		virtual void reactOnCollision(GObject* other);
 	};
 }

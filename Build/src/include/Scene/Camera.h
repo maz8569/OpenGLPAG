@@ -157,6 +157,8 @@ namespace GameEngine {
             float distance = sqrtf( x * x + y * y) * 2;
             distance = clamp(distance, min_z, max_z);
             Position -= Front * distance;
+
+            //updateCameraVectors();
         }
 
     private:

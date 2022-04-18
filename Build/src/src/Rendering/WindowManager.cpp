@@ -30,6 +30,7 @@ int GameEngine::WindowManager::createWindow()
         return -1;
     }
     glfwMakeContextCurrent(window);
+
     return 0;
 }
 

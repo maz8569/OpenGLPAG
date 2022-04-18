@@ -9,22 +9,41 @@ void GameEngine::Player::render()
 
 void GameEngine::Player::Update()
 {
-    currentSpeed = speed * inputManager->getHorizontal();
+    currentSpeed.x = speed * inputManager->getHorizontal();
 
-    get_transform().m_position.x += currentSpeed * 0.005;
+    currentSpeed.y = speed * inputManager->getVertical();
 
-    currentSpeed = speed * inputManager->getVertical();
+    //currentSpeed = glm::normalize(currentSpeed);
+    get_transform().m_position.x += currentSpeed.x * 0.005;
 
-    get_transform().m_position.y += currentSpeed * 0.005;
+    get_transform().m_position.y += currentSpeed.y * 0.005;
+
+    jumpPower += gravity / 60;
+    get_transform().m_position.z += jumpPower * 0.005;
+    if (get_transform().m_position.z < 0)
+    {
+        get_transform().m_position.z = 0;
+        jumpPower = 0;
+    }
+
+    if (inputManager->getJump()) {
+        jump();
+    }
 
     update(get_parent()->get_transform(), true);
 
     Entity::Update();
 }
 
+void GameEngine::Player::jump()
+{
+    jumpPower = jumpHeight;
+}
+
 void GameEngine::Player::reactOnCollision(GObject* other)
 {
-    get_transform().m_position.x -= currentSpeed * 0.005;
+    get_transform().m_position.y -= currentSpeed.x * 0.005;
+    get_transform().m_position.x -= currentSpeed.y * 0.005;
     
     /*
     auto vec = getAABB()->testDepth(other->getAABB());

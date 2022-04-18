@@ -373,6 +373,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Physics\RayCasting\MousePicker.cpp" />
+    <ClCompile Include="src\Rendering\Shape.cpp" />
     <ClCompile Include="src\Physics\Collisions\AABB.cpp" />
     <ClCompile Include="src\Audio\AudioManager.cpp" />
     <ClCompile Include="src\Physics\Collisions\Collider.cpp" />
@@ -403,6 +405,8 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="include\Rendering\MasterRenderer.h" />
     <ClInclude Include="include\Physics\RayCasting\Ray.h" />
     <ClInclude Include="include\Rendering\TextRenderer.h" />
+    <ClInclude Include="include\Rendering\Shape.h" />
+    <ClInclude Include="include\Physics\RayCasting\MousePicker.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="include\Rendering\WindowManager.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
