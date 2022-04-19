@@ -39,14 +39,14 @@ unsigned int loadCubemap(vector<std::string> faces);
 void renderQuad();
 
 // settings
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
+//const unsigned int SCR_WIDTH = 1920;
+//const unsigned int SCR_HEIGHT = 1080;
 
 const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
 Ref<Camera> camera;
-float lastX = (float)SCR_WIDTH / 2.0;
-float lastY = (float)SCR_HEIGHT / 2.0;
+float lastX = (float)WindowManager::SCR_WIDTH / 2.0;
+float lastY = (float)WindowManager::SCR_HEIGHT / 2.0;
 bool firstMouse = true;
 float p_height = 0.0f;
 // timing
@@ -58,7 +58,7 @@ float ftime = 0.0f;
 
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 lightPos(0.0f, -4.0f, 0.0f);
+glm::vec3 lightPos(0.0f, 0.0f, -4.0f);
 
 glm::vec3 direction;
 
@@ -259,8 +259,9 @@ void update(float dt)
 
     player->Update();
     courier->Update();
-    camera->Move();
     colMan->CollisionCheck();
+    camera->Move();
+
     mousePicker->update();
 }
 
@@ -317,7 +318,7 @@ void render()
     glClearColor(0.8f, 0.8f, 1.f, 0.6f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
     // activate shader
-    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
 
     shadowMap->use();
     shadowMap->setMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -331,10 +332,10 @@ void render()
 
     ourShader->use();
 
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glViewport(0, 0, WindowManager::SCR_WIDTH, WindowManager::SCR_HEIGHT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+    glViewport(0, 0, WindowManager::SCR_WIDTH, WindowManager::SCR_HEIGHT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     ourShader->setVec3("color", { 1, 1, 1 });
     ourShader->setMat4("view", view);
@@ -660,10 +661,13 @@ int main()
     twodOrbit->add_child(twod);
     twodOrbit->add_child(twod2);
 
+    projection = glm::perspective(glm::radians(camera->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
+    mousePicker = CreateRef<MousePicker>(MousePicker(camera, projection, inputManager));
     player = std::make_shared<Player>(inputManager, b, ourShader, colMan);
-    courier = std::make_shared<Courier>(bu, ourShader, colMan);
+    courier = std::make_shared<Courier>( mousePicker, bu, ourShader, colMan);
+    courier->set_local_position({ 2, 0, 0 });
     //player->set_render_AABB(true);
-    //courier->set_render_AABB(true);
+    courier->set_render_AABB(true);
     //courier->set_color({ 0.6, 0.6, 0.6 });
     root->add_child(player);
     root->add_child(courier);
@@ -672,10 +676,9 @@ int main()
     root->update(root->get_transform(), true);
 
     camera->player = player;
-    camera->courier = courier;
+    camera->courier = courier->get_transform();
 
-    projection = glm::perspective(glm::radians(camera->Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    mousePicker = CreateRef<MousePicker>(MousePicker(camera, projection, inputManager));
+
     // load and create a texture 
     // -------------------------
     stbi_set_flip_vertically_on_load(true);

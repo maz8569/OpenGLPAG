@@ -7,19 +7,25 @@ GameEngine::MousePicker::MousePicker(Ref<Camera> camera, glm::mat4 projectionMat
 	m_viewMatrix = camera->GetViewMatrix();
 }
 
-void GameEngine::MousePicker::update()
+bool GameEngine::MousePicker::update()
 {
 	m_viewMatrix = m_camera->GetViewMatrix();
+	m_currentRay = calculateRay();
 	if (m_inputManager->m_isRclicked)
 	{
-		m_currentRay = calculateRay();
+		return true;
 	}
-	
+	return false;
 }
 
 glm::vec3 GameEngine::MousePicker::getCurrentRay()
 {
 	return m_currentRay;
+}
+
+glm::vec3 GameEngine::MousePicker::getCameraPos()
+{
+	return m_camera->Position;
 }
 
 glm::vec3 GameEngine::MousePicker::calculateRay()

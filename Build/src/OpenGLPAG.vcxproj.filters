@@ -67,6 +67,7 @@
     <ClCompile Include="src\Physics\Collisions\Collider.cpp" />
     <ClCompile Include="src\Rendering\Shape.cpp" />
     <ClCompile Include="src\Physics\RayCasting\MousePicker.cpp" />
+    <ClCompile Include="src\Physics\Collisions\PlaneCollider.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Rendering\Shader.h">
@@ -147,6 +148,7 @@
     <ClInclude Include="include\Physics\Collisions\Collider.h" />
     <ClInclude Include="include\Rendering\Shape.h" />
     <ClInclude Include="include\Physics\RayCasting\MousePicker.h" />
+    <ClInclude Include="include\Physics\Collisions\PlaneCollider.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\prog\OpenGLPAG\OpenGLPAG\src\CMakeLists.txt">

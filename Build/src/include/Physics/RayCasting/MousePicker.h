@@ -24,8 +24,10 @@ namespace GameEngine {
 	public:
 		MousePicker(Ref<Camera> camera, glm::mat4 projectionMatrix, Ref<InputManager> inputManager);
 
-		void update();
+		bool update();
 
 		glm::vec3 getCurrentRay();
+
+		glm::vec3 getCameraPos();
 	};
 }

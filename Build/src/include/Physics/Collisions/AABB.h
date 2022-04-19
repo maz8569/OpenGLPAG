@@ -21,12 +21,13 @@ namespace GameEngine {
 
 		std::array<glm::vec3, 8> getVertice() const;
 
-		glm::vec3 max();
-		glm::vec3 min();
+		glm::vec3 getMax();
+		glm::vec3 getMin();
 
 		glm::vec3 testDepth(Ref<AABB> other);
 		float getSmallestDistance(Ref<AABB> other);
 		bool collides(Ref<AABB> other) const;
+		bool pointVsAABB(glm::vec3 point);
 	};
 
 	AABB generateAABB(std::shared_ptr<Model> model);

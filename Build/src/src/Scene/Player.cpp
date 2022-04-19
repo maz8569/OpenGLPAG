@@ -42,8 +42,9 @@ void GameEngine::Player::jump()
 
 void GameEngine::Player::reactOnCollision(GObject* other)
 {
-    get_transform().m_position.y -= currentSpeed.x * 0.005;
-    get_transform().m_position.x -= currentSpeed.y * 0.005;
+    //get_transform().m_position.y -= other->getAABB()->extents[0] * 0.5;
+    get_transform().m_position.x -= currentSpeed.x * 0.005;
+    get_transform().m_position.y -= currentSpeed.y * 0.005;
     
     /*
     auto vec = getAABB()->testDepth(other->getAABB());
@@ -74,4 +75,5 @@ void GameEngine::Player::reactOnCollision(GObject* other)
     
     std::cout << vec[i];
     */
+    MoveColliders();
 }

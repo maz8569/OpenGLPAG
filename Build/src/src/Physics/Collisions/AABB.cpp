@@ -26,12 +26,12 @@ std::array<glm::vec3, 8> GameEngine::AABB::getVertice() const
 	return vertice;
 }
 
-glm::vec3 GameEngine::AABB::max()
+glm::vec3 GameEngine::AABB::getMax()
 {
 	return center - extents[0] - extents[1] - extents[2];
 }
 
-glm::vec3 GameEngine::AABB::min()
+glm::vec3 GameEngine::AABB::getMin()
 {
 	return center + extents[0] + extents[1] + extents[2];
 }
@@ -60,6 +60,18 @@ bool GameEngine::AABB::collides(Ref<AABB> other) const
 	for (int i = 0; i < 3; i++)
 	{
 		if (abs(center[i] - other->center[i]) > (extents[i] + other->extents[i]))
+			return 0;
+	}
+	return 1;
+}
+
+bool GameEngine::AABB::pointVsAABB(glm::vec3 point)
+{
+	auto max = getMax();
+	auto min = getMin();
+	for (int i = 0; i < 3; i++)
+	{
+		if (!(point[i] >= min[i] && point[i] <= max[i]))
 			return 0;
 	}
 	return 1;

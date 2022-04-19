@@ -6,7 +6,7 @@
 #include <vector>
 #include "Scene/GObject.h"
 #include "Scene/Player.h"
-#include "Scene/Courier.h"
+//#include "Scene/Courier.h"
 
 namespace GameEngine {
     // Defines several possible options for camera movement. Used as abstraction to stay away from window-system specific input methods
@@ -46,7 +46,7 @@ namespace GameEngine {
         float min_z = 10.f;
         float max_z = 40.f;
         std::shared_ptr<Player> player;
-        std::shared_ptr<Courier> courier = nullptr;
+        Transform courier;
 
 
         // constructor with vectors
@@ -142,14 +142,14 @@ namespace GameEngine {
         virtual void Move()
         {
             glm::vec3 second;
-            if (courier == nullptr)
-            {
-                second = { 0, 0, 0 };
-            }
-            else
-            {
-                second = courier->get_transform().m_position;
-            }
+            //if (courier)
+            //{
+                //second = { 0, 0, 0 };
+            //}
+            //else
+            //{
+                second = courier.m_position;
+            //}
 
             Position = (player->get_transform().m_position + second) * 0.5f;
             float x = player->get_transform().m_position.x - second.x;
