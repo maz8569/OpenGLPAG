@@ -51,12 +51,12 @@ void GameEngine::InputManager::getInput()
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS)
     {
+        glfwGetCursorPos(window, &m_posx, &m_posy);
         m_isRclicked = true;
     }
 
     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && m_isRclicked)
     {
-        glfwGetCursorPos(window, &m_posx, &m_posy);
         m_isRclicked = false;
     }
 }

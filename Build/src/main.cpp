@@ -666,6 +666,7 @@ int main()
     player = std::make_shared<Player>(inputManager, b, ourShader, colMan);
     courier = std::make_shared<Courier>( mousePicker, bu, ourShader, colMan);
     courier->set_local_position({ 2, 0, 0 });
+    player->set_local_position({ -2, 0, 0 });
     //player->set_render_AABB(true);
     courier->set_render_AABB(true);
     //courier->set_color({ 0.6, 0.6, 0.6 });

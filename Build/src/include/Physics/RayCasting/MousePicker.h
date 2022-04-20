@@ -22,12 +22,15 @@ namespace GameEngine {
 		glm::vec3 toWorldCoords(glm::vec4 eyeCoords);
 
 	public:
+
 		MousePicker(Ref<Camera> camera, glm::mat4 projectionMatrix, Ref<InputManager> inputManager);
 
-		bool update();
+		void update();
 
 		glm::vec3 getCurrentRay();
 
 		glm::vec3 getCameraPos();
+
+		Ref<InputManager> getInputManager();
 	};
 }

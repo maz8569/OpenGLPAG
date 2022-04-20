@@ -7,8 +7,9 @@ namespace GameEngine {
 	class Courier : public Entity
 	{
 	private:
-		float speed = 1.f;
+		float m_speed = 1.f;
 		Ref<MousePicker> m_mousePicker;
+		Ref<InputManager> m_inputManager;
 
 	public:
 		Courier(Ref<MousePicker> mousePicker, Ref<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Collision> colMan);

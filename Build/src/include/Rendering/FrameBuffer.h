@@ -1,6 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <glad/glad.h>
+#include <iostream>
 #include <vector>
 #include "typedefs.h"
 
@@ -35,7 +36,7 @@ namespace GameEngine {
 
 	struct FrameBufferConfig {
 		GLuint width = 1024;
-		GLuint heigth = 1024;
+		GLuint height = 1024;
 
 		std::vector<FramebufferTextureConfig> Textures;
 		std::vector<FramebufferRenderbufferConfig> Renderbuffers;
@@ -51,11 +52,11 @@ namespace GameEngine {
 		FrameBufferConfig m_config;
 
 	public:
-		/*
+		
 		static Ref<FrameBuffer> Create(const FrameBufferConfig& config);
 
 		FrameBuffer(const FrameBufferConfig& config);
-		~FrameBuffer();
+		virtual ~FrameBuffer();
 
 		void Bind();
 
@@ -64,12 +65,13 @@ namespace GameEngine {
 		void Unbind();
 
 		void Resize(uint32_t width, uint32_t height);
+		
 
 		inline const FrameBufferConfig& GetConfiguration() const { return m_config; }
 
 		inline uint32_t GetID() const { return m_ID; }
 		inline uint32_t GetColorAttachment() const { return m_colorAttachment; }
 		inline uint32_t GetDepthAttachment() const { return m_depthAttachment; }
-		*/
+		
 	};
 }
