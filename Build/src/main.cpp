@@ -58,7 +58,7 @@ float ftime = 0.0f;
 
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 lightPos(0.0f, 0.0f, -4.0f);
+glm::vec3 lightPos(0.0f, -10.0f, 2.0f);
 
 glm::vec3 direction;
 
@@ -219,7 +219,7 @@ float twoDD[] = {
              0.5f,  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  1.0f
 };
 
-glm::vec3 pLightColor(1.0f, 1.0f, 1.0f);
+glm::vec3 pLightColor(0.9f, 0.68f, 0.9f);
 float a = 0.0f;
 
 void input()
@@ -234,8 +234,8 @@ void update(float dt)
 {
     ourShader->setMat4("view", view); 
     model_s = spunkt->get_transform().m_world_matrix;
-    twodOrbit->set_local_rotation({0, twodOrbit->get_transform().m_rotation.y + 1, 0});
-    twodOrbit->update(root->get_transform(), true);
+    //twodOrbit->set_local_rotation({0, twodOrbit->get_transform().m_rotation.y + 1, 0});
+    //twodOrbit->update(root->get_transform(), true);
     //twod->update(root->get_transform(), true);
 
 
@@ -257,9 +257,11 @@ void update(float dt)
         ftime += dt;
     }
 
+    colMan->CollisionCheck();
+
     player->Update();
     courier->Update();
-    colMan->CollisionCheck();
+    camera->courier = courier->get_transform().m_position;
     camera->Move();
 
     mousePicker->update();
@@ -566,7 +568,9 @@ int main()
     {
         return -1;
     }
-    camera = CreateRef<Camera>(Camera(glm::vec3(0.0f, 0.0f, 3.0f)));
+    camera = CreateRef<Camera>(Camera(glm::vec3(0.0f, 3.0f, 0.0f)));
+    camera->Pitch = -90;
+    camera->Yaw = 90;
 
     ourShader = std::make_shared<Shader>(Shader("res/shaders/basic.vert", "res/shaders/basic.frag"));
     //lightSourceShader = std::make_shared<Shader>(Shader("res/shaders/lightsource.vert", "res/shaders/lightsource.frag"));
@@ -603,7 +607,7 @@ int main()
     debugDepth->use();
     debugDepth->setInt("depthMap", 0);
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f),(float) WindowManager::SCR_WIDTH / WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
     ourShader->setMat4("projection", projection);
     //instancedShader->setMat4("projection", projection);
     
@@ -649,8 +653,9 @@ int main()
     twod = std::make_shared<SceneNode>(SceneNode());
     twod2 = std::make_shared<SceneNode>(SceneNode());
     //spunkt->set_local_scale({ 0.1, 0.1, 0.1 });
-    spunkt->set_local_position({ 0, 0, -6 });
+    spunkt->set_local_position({ 0, -6, 0 });
     spunkt->set_local_scale({ 20, 20, 1 });
+    spunkt->set_local_rotation({ 90, 0, 0 });
     twodOrbit->set_local_position({ 0, 0, 0 });
     twodOrbit->set_local_rotation({ 0, 0, 0 });
     twod->set_local_position({ 0, 0, 4 });
@@ -677,7 +682,6 @@ int main()
     root->update(root->get_transform(), true);
 
     camera->player = player;
-    camera->courier = courier->get_transform();
 
 
     // load and create a texture 
@@ -687,8 +691,8 @@ int main()
     texture2 = loadTexture(std::string("res/textures/crate.png").c_str());
     traincubesTexture = loadTexture(std::string("res/textures/torus.png").c_str());
 
-    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    lightView = glm::lookAt(-lightPos, glm::vec3(0.0f, 0.f, -0.0f), glm::vec3(0.0, 1.0, 0.0));
+    lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, near_plane, far_plane);
+    lightView = glm::lookAt(-lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0, 1.0, 0.0));
     lightSpaceMatrix = lightProjection * lightView;
 
     glm::mat4 model = glm::mat4(1.0f);

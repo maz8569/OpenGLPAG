@@ -22,7 +22,7 @@ void GameEngine::Courier::Update()
 	{
 		glm::vec3 start = m_mousePicker->getCameraPos();
 		glm::vec3 dir = m_mousePicker->getCurrentRay();
-		std::cout << dir.x << " " << dir.y << " " << dir.z << " " << std::endl;
+		//std::cout << dir.x << " " << dir.y << " " << dir.z << " " << std::endl;
 
 
 		glm::vec3 end = dir *10.f + start;
@@ -31,7 +31,7 @@ void GameEngine::Courier::Update()
 		update(get_parent()->get_transform(), true);
 
 
-		std::cout << end.x << " " << end.y << " " << end.z << " " << std::endl;
+		//std::cout << end.x << " " << end.y << " " << end.z << " " << std::endl;
 
 	}
 
@@ -41,5 +41,5 @@ void GameEngine::Courier::Update()
 
 void GameEngine::Courier::reactOnCollision(GObject* other)
 {
-	std::cout << "end";
+	//std::cout << "end";
 }

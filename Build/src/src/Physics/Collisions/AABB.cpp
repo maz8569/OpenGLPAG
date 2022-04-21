@@ -42,8 +42,7 @@ glm::vec3 GameEngine::AABB::testDepth(Ref<AABB> other)
 
 	for (int i = 0; i < 3; i++)
 	{
-		if (abs(center[i] - other->center[i]) > (extents[i] + other->extents[i]))
-			result[i] = extents[i] + other->extents[i] - center[i] - other->center[i];
+		result[i] = -extents[i] + other->extents[i] + center[i] - other->center[i];
 	}
 	return result;
 }

@@ -1,21 +1,18 @@
 #include "Physics/RayCasting/MousePicker.h"
 #include "Rendering/WindowManager.h"
 
+using namespace GameEngine;
+
 GameEngine::MousePicker::MousePicker(Ref<Camera> camera, glm::mat4 projectionMatrix, Ref<InputManager> inputManager)
 	: m_camera(camera), m_projectionMatrix(projectionMatrix), m_inputManager(inputManager)
 {
 	m_viewMatrix = camera->GetViewMatrix();
 }
 
-bool GameEngine::MousePicker::update()
+void GameEngine::MousePicker::update()
 {
 	m_viewMatrix = m_camera->GetViewMatrix();
 	m_currentRay = calculateRay();
-	if (m_inputManager->m_isRclicked)
-	{
-		return true;
-	}
-	return false;
 }
 
 glm::vec3 GameEngine::MousePicker::getCurrentRay()
@@ -26,6 +23,11 @@ glm::vec3 GameEngine::MousePicker::getCurrentRay()
 glm::vec3 GameEngine::MousePicker::getCameraPos()
 {
 	return m_camera->Position;
+}
+
+Ref<InputManager> GameEngine::MousePicker::getInputManager()
+{
+	return m_inputManager;
 }
 
 glm::vec3 GameEngine::MousePicker::calculateRay()
