@@ -72,6 +72,15 @@
     <ClCompile Include="src\ECS\ecsComponent.cpp" />
     <ClCompile Include="src\Rendering\Frustum.cpp" />
     <ClCompile Include="src\World\Chunk.cpp" />
+    <ClCompile Include="src\World\BlockType.cpp" />
+    <ClCompile Include="src\World\ChunkBlock.cpp" />
+    <ClCompile Include="src\World\BlockData.cpp" />
+    <ClCompile Include="src\World\World.cpp" />
+    <ClCompile Include="src\World\BlockDatabase.cpp" />
+    <ClCompile Include="src\Utils\FileUtil.cpp" />
+    <ClCompile Include="src\Texture\BasicTexture.cpp" />
+    <ClCompile Include="src\Texture\TextureAtlas.cpp" />
+    <ClCompile Include="src\World\ChunkSection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Rendering\Shader.h">
@@ -157,6 +166,20 @@
     <ClInclude Include="include\ECS\ecsComponent.h" />
     <ClInclude Include="include\Rendering\Frustum.h" />
     <ClInclude Include="include\World\Chunk.h" />
+    <ClInclude Include="include\World\BlockType.h" />
+    <ClInclude Include="include\World\BlockId.h" />
+    <ClInclude Include="include\World\ChunkBlock.h" />
+    <ClInclude Include="include\World\BlockData.h" />
+    <ClInclude Include="include\World\IChunk.h" />
+    <ClInclude Include="include\World\World.h" />
+    <ClInclude Include="include\World\BlockDatabase.h" />
+    <ClInclude Include="include\Utils\FileUtil.h" />
+    <ClInclude Include="include\Utils\NonCopyable.h" />
+    <ClInclude Include="include\Utils\NonMovable.h" />
+    <ClInclude Include="include\Utils\Singleton.h" />
+    <ClInclude Include="include\Texture\BasicTexture.h" />
+    <ClInclude Include="include\Texture\TextureAtlas.h" />
+    <ClInclude Include="include\World\ChunkSection.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\prog\OpenGLPAG\OpenGLPAG\src\CMakeLists.txt">

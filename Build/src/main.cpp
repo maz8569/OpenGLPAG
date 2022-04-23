@@ -27,6 +27,7 @@
 #include "Rendering/FrameBuffer.h"
 #include "Rendering/Shape.h"
 #include "Physics/RayCasting/MousePicker.h"
+#include "Scene/Scene.h"
 
 using namespace GameEngine;
 
@@ -44,7 +45,6 @@ void renderQuad();
 
 const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
-Ref<Camera> camera;
 float lastX = (float)WindowManager::SCR_WIDTH / 2.0;
 float lastY = (float)WindowManager::SCR_HEIGHT / 2.0;
 bool firstMouse = true;
@@ -58,7 +58,7 @@ float ftime = 0.0f;
 
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 lightPos(0.0f, -10.0f, 2.0f);
+glm::vec3 lightPos(0.0f, -4.0f, 0.0f);
 
 glm::vec3 direction;
 
@@ -81,6 +81,7 @@ Ref<AudioManager> audioManager = nullptr;
 Ref<TextRenderer> textRenderer = nullptr;
 Ref<Json> jsonParser = nullptr;
 Ref<MousePicker> mousePicker = nullptr;
+Ref<Scene> scene1 = nullptr;
 
 int fps = 0;
 
@@ -89,7 +90,7 @@ glm::vec3 p_pos = { 1, 0, 1 };
 glm::mat4 model_s;
 //glm::mat4 ortho;
 
-int shinyyy = 32;
+int shinyyy = 128;
 
 float p_const = 1.0f;
 float p_lin = 0.09f;
@@ -115,7 +116,6 @@ std::shared_ptr<Courier> courier;
 
 //unsigned int VBO, VAO;
 Ref<Shape> quad;
-unsigned int lightSource_VBO, lightSource_VAO;
 
 unsigned int depthMapFBO, depthMap;
 
@@ -164,52 +164,6 @@ float vertices[] = {
         -0.5f,  0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f,
         -0.5f,  0.5f, -0.5f,  0.5f, 0.5f,  0.0f,  1.0f,  0.0f,
 };
-
-float lights_vertices[] = {
-    // positions          // normals           
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f, 
-     0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-    -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 
-     0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 
-     0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 
-    -0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 
-    -0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f, 
-
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 
-    -0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,  
-    -0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f, 
-    -0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 
-    -0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f, 
-
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  
-     0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 
-     0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f, 
-     0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,  
-     0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f, 
-
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,  
-     0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,  
-     0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 
-    -0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f, 
-    -0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f, 
-
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-     0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f, 
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 
-     0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 
-    -0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f, 
-    -0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-};
-
 float twoDD[] = {
              0.5f,  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  1.0f,
             -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,
@@ -225,7 +179,7 @@ float a = 0.0f;
 void input()
 {
     processInput(windowManager->window);
-    view = camera->GetViewMatrix();
+    view = scene1->getCamera()->GetViewMatrix();
     inputManager->getInput();
 
 }
@@ -238,7 +192,7 @@ void update(float dt)
     //twodOrbit->update(root->get_transform(), true);
     //twod->update(root->get_transform(), true);
 
-
+    /*
     if (ftime > 1)
     {
         if (score < 3000)
@@ -256,13 +210,14 @@ void update(float dt)
     {
         ftime += dt;
     }
+    */
 
     colMan->CollisionCheck();
 
     player->Update();
     courier->Update();
-    camera->courier = courier->get_transform().m_position;
-    camera->Move();
+    scene1->getCamera()->courier = courier->get_transform().m_position;
+    scene1->getCamera()->Move();
 
     mousePicker->update();
 }
@@ -270,7 +225,7 @@ void update(float dt)
 void activate_lights(std::shared_ptr<Shader> shader)
 {
     shader->setFloat("shininess", shinyyy);
-    shader->setVec3("viewPos", camera->Position);
+    shader->setVec3("viewPos", scene1->getCamera()->Position);
     /*
     glm::vec3 position = model_s * glm::vec4(1.0f);
     shader->setVec3("pointLight.position", {0, 2, -1});
@@ -296,20 +251,20 @@ void RenderScene(std::shared_ptr<Shader> shader)
     courier->render();
 
     shader->setInt("texture1", 0);
-    glActiveTexture(GL_TEXTURE0);
+    //glActiveTexture(GL_TEXTURE0);
 
     //glBindVertexArray(VAO);
 
     //shader->setMat4("model", twod->get_transform().m_world_matrix);
-    glBindTexture(GL_TEXTURE_2D, traincubesTexture);
+    //glBindTexture(GL_TEXTURE_2D, traincubesTexture);
     //glDrawArrays(GL_TRIANGLES, 0, 6);
 
     //shader->setMat4("model", twod2->get_transform().m_world_matrix);
     //glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    glBindTexture(GL_TEXTURE_2D, texture1);
-    shader->setMat4("model", spunkt->get_transform().m_world_matrix);
-    quad->Render(6);
+    //glBindTexture(GL_TEXTURE_2D, texture1);
+    //shader->setMat4("model", spunkt->get_transform().m_world_matrix);
+    //quad->Render(6);
     //glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -320,7 +275,7 @@ void render()
     glClearColor(0.8f, 0.8f, 1.f, 0.6f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
     // activate shader
-    glm::mat4 projection = glm::perspective(glm::radians(camera->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(scene1->getCamera()->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
 
     shadowMap->use();
     shadowMap->setMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -427,7 +382,6 @@ int main()
     inputManager = std::make_shared<InputManager>(windowManager->window);
     colMan = std::make_shared<Collision>();
 
-
     windowManager->freeCursor();
 
     // glad: load all OpenGL function pointers
@@ -448,9 +402,10 @@ int main()
     // build and compile our shader zprogram
     // ------------------------------------
 
-    std::shared_ptr<Model> b = std::make_shared<Model>(Model("res/models/cube/cube.obj"));
-    std::shared_ptr<Model> bu = std::make_shared<Model>(Model("res/models/statek/untitled.obj"));
-    std::shared_ptr<Model> scene = std::make_shared<Model>(Model("res/models/scene/scene.obj"));
+    Ref<Model> b = CreateRef<Model>(Model("res/models/cube/cube.obj"));
+    Ref<Model> bu = CreateRef<Model>(Model("res/models/statek/untitled.obj"));
+    Ref<Model> scene = CreateRef<Model>(Model("res/models/scene/scene.obj"));
+    scene1 = CreateRef<Scene>("Scene 1");
 
     audioManager = CreateRef<AudioManager>();
     //OpenAL_ErrorCheck(device);
@@ -568,9 +523,7 @@ int main()
     {
         return -1;
     }
-    camera = CreateRef<Camera>(Camera(glm::vec3(0.0f, 3.0f, 0.0f)));
-    camera->Pitch = -90;
-    camera->Yaw = 90;
+
 
     ourShader = std::make_shared<Shader>(Shader("res/shaders/basic.vert", "res/shaders/basic.frag"));
     //lightSourceShader = std::make_shared<Shader>(Shader("res/shaders/lightsource.vert", "res/shaders/lightsource.frag"));
@@ -630,21 +583,7 @@ int main()
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    glGenVertexArrays(1, &lightSource_VAO);
-    glGenBuffers(1, &lightSource_VBO);
-
-    glBindVertexArray(lightSource_VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, lightSource_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(lights_vertices), lights_vertices, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
     quad = CreateRef<Shape>(Shape(vertices, sizeof(vertices), Coords::COORDSTEXTNORM));
-    //glGenVertexArrays(1, &VAO);
-    //glGenBuffers(1, &VBO);
 
     root = std::make_shared<SceneNode>(SceneNode());
     spunkt = std::make_shared<SceneNode>(SceneNode());
@@ -666,11 +605,12 @@ int main()
     twodOrbit->add_child(twod);
     twodOrbit->add_child(twod2);
 
-    projection = glm::perspective(glm::radians(camera->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
-    mousePicker = CreateRef<MousePicker>(MousePicker(camera, projection, inputManager));
+    projection = glm::perspective(glm::radians(scene1->getCamera()->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
+    mousePicker = CreateRef<MousePicker>(MousePicker(scene1->getCamera(), projection, inputManager));
     player = std::make_shared<Player>(inputManager, b, ourShader, colMan);
     courier = std::make_shared<Courier>( mousePicker, bu, ourShader, colMan);
     courier->set_local_position({ 2, 0, 0 });
+    //courier->set_local_rotation({ 90, 0, 0 });
     player->set_local_position({ -2, 0, 0 });
     //player->set_render_AABB(true);
     courier->set_render_AABB(true);
@@ -681,13 +621,13 @@ int main()
     courier->add_parent(root);
     root->update(root->get_transform(), true);
 
-    camera->player = player;
+    scene1->getCamera()->player = player;
 
 
     // load and create a texture 
     // -------------------------
     stbi_set_flip_vertically_on_load(true);
-    texture1 = loadTexture(std::string("res/textures/domek.jpg").c_str());
+    texture1 = loadTexture(std::string("res/textures/torus.png").c_str());
     texture2 = loadTexture(std::string("res/textures/crate.png").c_str());
     traincubesTexture = loadTexture(std::string("res/textures/torus.png").c_str());
 
@@ -738,10 +678,6 @@ int main()
     windowManager->closeWindow();
 
     quad->clean();
-
-    glDeleteVertexArrays(1, &lightSource_VAO);
-    glDeleteBuffers(1, &lightSource_VBO);
-    
     textRenderer->clean();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////

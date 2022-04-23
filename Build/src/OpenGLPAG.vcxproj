@@ -373,6 +373,16 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\World\ChunkSection.cpp" />
+    <ClCompile Include="src\Texture\BasicTexture.cpp" />
+    <ClCompile Include="src\Utils\FileUtil.cpp" />
+    <ClCompile Include="src\World\BlockDatabase.cpp" />
+    <ClCompile Include="src\World\BlockData.cpp" />
+    <ClCompile Include="src\World\ChunkBlock.cpp" />
+    <ClCompile Include="src\World\BlockType.cpp" />
+    <ClCompile Include="src\World\Chunk.cpp" />
+    <ClCompile Include="src\Rendering\Frustum.cpp" />
+    <ClCompile Include="src\ECS\ecsComponent.cpp" />
     <ClCompile Include="src\Physics\Collisions\PlaneCollider.cpp" />
     <ClCompile Include="src\Physics\RayCasting\MousePicker.cpp" />
     <ClCompile Include="src\Rendering\Shape.cpp" />
@@ -394,6 +404,23 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="src\Rendering\Model.cpp" />
     <ClCompile Include="src\Scene\Player.cpp" />
     <ClCompile Include="src\Scene\Scene.cpp" />
+    <ClCompile Include="src\Scene\Terrain.cpp" />
+    <ClCompile Include="src\World\World.cpp" />
+    <ClCompile Include="src\Texture\TextureAtlas.cpp" />
+    <ClInclude Include="include\World\ChunkSection.h" />
+    <ClInclude Include="include\Texture\BasicTexture.h" />
+    <ClInclude Include="include\Utils\FileUtil.h" />
+    <ClInclude Include="include\Utils\NonCopyable.h" />
+    <ClInclude Include="include\Utils\NonMovable.h" />
+    <ClInclude Include="include\Utils\Singleton.h" />
+    <ClInclude Include="include\World\BlockDatabase.h" />
+    <ClInclude Include="include\World\BlockData.h" />
+    <ClInclude Include="include\World\ChunkBlock.h" />
+    <ClInclude Include="include\World\BlockId.h" />
+    <ClInclude Include="include\World\BlockType.h" />
+    <ClInclude Include="include\World\Chunk.h" />
+    <ClInclude Include="include\Rendering\Frustum.h" />
+    <ClInclude Include="include\ECS\ecsComponent.h" />
     <ClInclude Include="include\Physics\Collisions\AABB.h" />
     <ClInclude Include="include\Audio\AudioManager.h" />
     <ClInclude Include="include\Scene\Camera.h" />
@@ -409,6 +436,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="include\Rendering\Shape.h" />
     <ClInclude Include="include\Physics\RayCasting\MousePicker.h" />
     <ClInclude Include="include\Physics\Collisions\PlaneCollider.h" />
+    <ClInclude Include="include\Scene\Terrain.h" />
+    <ClInclude Include="include\World\IChunk.h" />
+    <ClInclude Include="include\Texture\TextureAtlas.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="include\Rendering\WindowManager.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
@@ -427,6 +457,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="include\Scene\SceneGraph.h" />
     <ClInclude Include="include\Rendering\Shader.h" />
     <ClInclude Include="train.h" />
+    <ClInclude Include="include\World\World.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="E:\prog\OpenGLPAG\OpenGLPAG\Build\ZERO_CHECK.vcxproj">
