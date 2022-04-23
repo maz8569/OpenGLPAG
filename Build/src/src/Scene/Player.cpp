@@ -79,13 +79,13 @@ void GameEngine::Player::reactOnCollision(GObject* other)
     std::cout << vec[i] << " ";
     switch(i) {
     case 0:
-        get_transform().m_position.x += vec[0] * 0.5;
+        get_transform().m_position.x += vec[0];
         break;
     case 1:
-        get_transform().m_position.y += vec[1] * 0.5;
+        get_transform().m_position.y += vec[1];
         break;
     case 2:
-        get_transform().m_position.z += vec[2] * 0.5;
+        get_transform().m_position.z += vec[2];
 
         break;
     }

@@ -68,6 +68,10 @@
     <ClCompile Include="src\Rendering\Shape.cpp" />
     <ClCompile Include="src\Physics\RayCasting\MousePicker.cpp" />
     <ClCompile Include="src\Physics\Collisions\PlaneCollider.cpp" />
+    <ClCompile Include="src\Scene\Terrain.cpp" />
+    <ClCompile Include="src\ECS\ecsComponent.cpp" />
+    <ClCompile Include="src\Rendering\Frustum.cpp" />
+    <ClCompile Include="src\World\Chunk.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Rendering\Shader.h">
@@ -149,6 +153,10 @@
     <ClInclude Include="include\Rendering\Shape.h" />
     <ClInclude Include="include\Physics\RayCasting\MousePicker.h" />
     <ClInclude Include="include\Physics\Collisions\PlaneCollider.h" />
+    <ClInclude Include="include\Scene\Terrain.h" />
+    <ClInclude Include="include\ECS\ecsComponent.h" />
+    <ClInclude Include="include\Rendering\Frustum.h" />
+    <ClInclude Include="include\World\Chunk.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\prog\OpenGLPAG\OpenGLPAG\src\CMakeLists.txt">

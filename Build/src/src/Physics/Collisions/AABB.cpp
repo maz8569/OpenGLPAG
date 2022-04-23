@@ -12,6 +12,50 @@ GameEngine::AABB::~AABB()
 {
 }
 
+void GameEngine::AABB::updateCenter(glm::vec3& newLocation)
+{
+	center = newLocation;
+}
+
+void GameEngine::AABB::updateExtents(glm::vec3& newExtents)
+{
+	extents = newExtents;
+}
+
+glm::vec3 GameEngine::AABB::getVN(const glm::vec3& normal) const
+{
+	glm::vec3 res = center;
+
+	if (normal.x < 0) {
+		res.x += extents.x;
+	}
+	if (normal.y < 0) {
+		res.y += extents.y;
+	}
+	if (normal.z < 0) {
+		res.z += extents.z;
+	}
+
+	return res;
+}
+
+glm::vec3 GameEngine::AABB::getVP(const glm::vec3& normal) const
+{
+	glm::vec3 res = center;
+
+	if (normal.x > 0) {
+		res.x += extents.x;
+	}
+	if (normal.y > 0) {
+		res.y += extents.y;
+	}
+	if (normal.z > 0) {
+		res.z += extents.z;
+	}
+
+	return res;
+}
+
 std::array<glm::vec3, 8> GameEngine::AABB::getVertice() const
 {
 	std::array<glm::vec3, 8> vertice;

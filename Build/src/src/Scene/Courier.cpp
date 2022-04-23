@@ -25,7 +25,7 @@ void GameEngine::Courier::Update()
 		//std::cout << dir.x << " " << dir.y << " " << dir.z << " " << std::endl;
 
 
-		glm::vec3 end = dir *10.f + start;
+		glm::vec3 end = dir *40.f + start;
 
 		get_transform().m_position = end;
 		update(get_parent()->get_transform(), true);

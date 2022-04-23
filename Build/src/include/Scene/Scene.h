@@ -18,7 +18,8 @@ namespace GameEngine {
 	public:
 		glm::mat4 m_lightSpace;
 
-		Scene();
+		Scene(std::string name);
+		//virtual ~Scene();
 
 		void Start();
 		void Update();
@@ -30,7 +31,8 @@ namespace GameEngine {
 		virtual std::vector<Ref<GObject>> getAllObjects();
 		virtual std::vector<Ref<GObject>> getAllObjectsByName(const std::string& name);
 		virtual Ref<GObject> getObjectByID(unsigned int ID);
-
+		
+		Ref<Camera> getCamera();
 	};
 }
 

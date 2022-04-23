@@ -67,6 +67,7 @@ Ref<AABB> GameEngine::GObject::getAABB() const
 
 void GameEngine::GObject::render()
 {
+	m_shader->use();
 	m_shader->setMat4("model", get_transform().m_world_matrix);
 	if (m_model != nullptr)
 	{
@@ -76,7 +77,7 @@ void GameEngine::GObject::render()
 		{
 			m_shader->setVec3("color", { 1, 1, 1 });
 			glBindVertexArray(VAO);
-			glDrawArrays(GL_LINE_LOOP, 0, 36);
+			glDrawArrays(GL_LINE_STRIP, 0, 36);
 		}
 	}
 

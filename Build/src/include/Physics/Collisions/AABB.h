@@ -19,6 +19,13 @@ namespace GameEngine {
 		AABB(const glm::vec3& inCenter, float iI, float iJ, float iK);
 		~AABB();
 
+		void updateCenter(glm::vec3& newLocation);
+		void updateExtents(glm::vec3& newExtents);
+
+		glm::vec3 getVN(const glm::vec3& normal) const;
+		glm::vec3 getVP(const glm::vec3& normal) const;
+
+
 		std::array<glm::vec3, 8> getVertice() const;
 
 		glm::vec3 getMax();

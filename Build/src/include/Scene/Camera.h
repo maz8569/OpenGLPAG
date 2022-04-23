@@ -6,6 +6,7 @@
 #include <vector>
 #include "Scene/GObject.h"
 #include "Scene/Player.h"
+#include "Rendering/Frustum.h"
 //#include "Scene/Courier.h"
 
 namespace GameEngine {
@@ -46,8 +47,13 @@ namespace GameEngine {
         float min_z = 10.f;
         float max_z = 40.f;
         std::shared_ptr<Player> player;
-        Transform courier;
+        glm::vec3 courier;
 
+        glm::mat4 m_projectionMatrix;
+        glm::mat4 m_viewMatrix;
+        glm::mat4 m_projViewMatrix;
+
+        ViewFrustum m_frustum;
 
         // constructor with vectors
         Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
@@ -71,7 +77,8 @@ namespace GameEngine {
         // returns the view matrix calculated using Euler Angles and the LookAt Matrix
         glm::mat4 GetViewMatrix()
         {
-            return glm::lookAt(Position, Position + Front, Up);
+            m_viewMatrix = glm::lookAt(Position, Position + Front, Up);
+            return m_viewMatrix;
         }
 
         // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -141,24 +148,27 @@ namespace GameEngine {
 
         virtual void Move()
         {
-            glm::vec3 second;
+            //glm::vec3 second;
             //if (courier)
             //{
                 //second = { 0, 0, 0 };
             //}
             //else
             //{
-                second = courier.m_position;
+            //second = courier.m_position;
+            //std::cout << second[0] << " " << second[1] << " " << second[2] << std::endl;
             //}
 
-            Position = (player->get_transform().m_position + second) * 0.5f;
-            float x = player->get_transform().m_position.x - second.x;
-            float y = player->get_transform().m_position.y - second.y;
+            Position = (player->get_transform().m_position + courier) * 0.5f;
+            float x = player->get_transform().m_position.x - courier.x;
+            float y = player->get_transform().m_position.y - courier.y;
             float distance = sqrtf( x * x + y * y) * 2;
             distance = clamp(distance, min_z, max_z);
             Position -= Front * distance;
 
-            //updateCameraVectors();
+            updateCameraVectors();
+            m_projViewMatrix = m_projectionMatrix * m_viewMatrix;
+
         }
 
     private:

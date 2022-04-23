@@ -53,3 +53,7 @@ void GameEngine::AudioManager::clean()
     alcDestroyContext(context);
     alcCloseDevice(device);
 }
+
+void GameEngine::AudioManager::readMonoData(std::string filename)
+{
+}
