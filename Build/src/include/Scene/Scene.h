@@ -5,17 +5,19 @@
 #include <vector>
 #include <Scene/GObject.h>
 #include "Camera.h"
+#include <Blocks/Layer.h>
 
 namespace GameEngine {
 	class Scene
 	{
 	private:
+
 		std::string m_name;
 		Ref<GObject> m_root;
 		std::vector<Ref<GObject>> m_GObjects;
-		Ref<Camera> m_camera;
 
 	public:
+		Ref<Camera> m_camera;
 		glm::mat4 m_lightSpace;
 
 		Scene(std::string name);
@@ -32,7 +34,6 @@ namespace GameEngine {
 		virtual std::vector<Ref<GObject>> getAllObjectsByName(const std::string& name);
 		virtual Ref<GObject> getObjectByID(unsigned int ID);
 		
-		Ref<Camera> getCamera();
 	};
 }
 

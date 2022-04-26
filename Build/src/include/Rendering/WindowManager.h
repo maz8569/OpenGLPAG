@@ -9,7 +9,6 @@ namespace GameEngine {
 	class WindowManager
 	{
 	public:
-		void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 		static const unsigned int SCR_WIDTH = 1920;
 		static const unsigned int SCR_HEIGHT = 1080;

@@ -37,6 +37,7 @@ GameEngine::GObject::GObject(std::shared_ptr<Model> model, std::shared_ptr<Shade
 	// position attribute
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	MoveColliders();
 }
 
 GameEngine::GObject::~GObject()
@@ -96,7 +97,8 @@ void GameEngine::GObject::Update()
 
 void GameEngine::GObject::reactOnCollision(GObject* other)
 {
-	std::cout << "collide";
+	//std::cout << "collide";
+	other->set_color({ 1, 0, 0 });
 }
 
 void GameEngine::GObject::MoveColliders()

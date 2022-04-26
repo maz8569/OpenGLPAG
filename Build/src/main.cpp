@@ -11,7 +11,7 @@
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
 #include <stb_image.h>
-#include "Rendering/Shader.h"
+#include "Shaders/Shader.h"
 #include "Scene/Camera.h"
 #include "Scene/SceneGraph.h"
 #include "Audio/AudioManager.h"
@@ -28,20 +28,27 @@
 #include "Rendering/Shape.h"
 #include "Physics/RayCasting/MousePicker.h"
 #include "Scene/Scene.h"
+#include "Application.h"
+#include <Rendering/MasterRenderer.h>
+#include <Blocks/Block.h>
+
+namespace GameEngine {
+    LayerDataTypePtr GameEngine::m_GetLayerDataForMeshing(int cx, int cz)
+    {
+        return LayerDataTypePtr();
+    }
+}
 
 using namespace GameEngine;
 
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-//void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 unsigned int loadTexture(const char* path);
 unsigned int loadCubemap(vector<std::string> faces);
 void renderQuad();
-
-// settings
-//const unsigned int SCR_WIDTH = 1920;
-//const unsigned int SCR_HEIGHT = 1080;
 
 const unsigned int SHADOW_WIDTH = 1024, SHADOW_HEIGHT = 1024;
 
@@ -58,7 +65,7 @@ float ftime = 0.0f;
 
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-glm::vec3 lightPos(0.0f, -4.0f, 0.0f);
+glm::vec3 lightPos(0.0f, -4.0f, 0.2f);
 
 glm::vec3 direction;
 
@@ -82,6 +89,7 @@ Ref<TextRenderer> textRenderer = nullptr;
 Ref<Json> jsonParser = nullptr;
 Ref<MousePicker> mousePicker = nullptr;
 Ref<Scene> scene1 = nullptr;
+Ref<Block> block = nullptr;
 
 int fps = 0;
 
@@ -113,57 +121,14 @@ std::shared_ptr<InputManager> inputManager = nullptr;
 
 std::shared_ptr<Player> player;
 std::shared_ptr<Courier> courier;
+std::shared_ptr<GObject> iisland;
 
+Ref<MasterRenderer> masterRenderer;
 //unsigned int VBO, VAO;
 Ref<Shape> quad;
 
 unsigned int depthMapFBO, depthMap;
 
-float vertices[] = {
-    /*
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.5f, 0.0f,  0.0f, -1.0f,
-         0.5f, -0.5f, -0.5f,  0.5f, 0.5f, 0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.5f, 1.0f, 0.0f,  0.0f, -1.0f,
-         0.5f,  0.5f, -0.5f,  0.5f, 1.0f, 0.0f,  0.0f, -1.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
-        -0.5f, -0.5f, -0.5f,  1.0f, 0.5f, 0.0f,  0.0f, -1.0f,
-     */   
-         0.5f,  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.5f, 0.0f,  0.0f,  1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.5f, 0.0f,  0.0f,  1.0f,
-         0.5f, -0.5f,  0.5f,  0.5f, 0.5f, 0.0f,  0.0f,  1.0f,
-         0.5f,  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  1.0f,
-
-
-        -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 0.5f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, -1.0f,  0.0f,  0.0f,
-
-         0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 0.5f, 1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,  0.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 1.0f,  0.0f,  0.0f,
-
-         0.5f, -0.5f, -0.5f,  0.5f, 0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.5f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f,  0.5f,  0.5f, 0.0f,  0.0f, -1.0f,  0.0f,
-        -0.5f, -0.5f, -0.5f,  0.5f, 0.5f,  0.0f, -1.0f,  0.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.5f, 0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 0.5f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f,
-        -0.5f,  0.5f, -0.5f,  0.5f, 0.5f,  0.0f,  1.0f,  0.0f,
-};
 float twoDD[] = {
              0.5f,  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  1.0f,
             -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,
@@ -179,7 +144,7 @@ float a = 0.0f;
 void input()
 {
     processInput(windowManager->window);
-    view = scene1->getCamera()->GetViewMatrix();
+    view = scene1->m_camera->GetViewMatrix();
     inputManager->getInput();
 
 }
@@ -212,20 +177,20 @@ void update(float dt)
     }
     */
 
-    colMan->CollisionCheck();
+    //colMan->CollisionCheck();
 
-    player->Update();
+    //player->Update();
     courier->Update();
-    scene1->getCamera()->courier = courier->get_transform().m_position;
-    scene1->getCamera()->Move();
+    scene1->m_camera->courier = courier->get_transform().m_position;
+    scene1->m_camera->Move();
 
-    mousePicker->update();
+    //mousePicker->update();
 }
 
 void activate_lights(std::shared_ptr<Shader> shader)
 {
     shader->setFloat("shininess", shinyyy);
-    shader->setVec3("viewPos", scene1->getCamera()->Position);
+    shader->setVec3("viewPos", scene1->m_camera->Position);
     /*
     glm::vec3 position = model_s * glm::vec4(1.0f);
     shader->setVec3("pointLight.position", {0, 2, -1});
@@ -247,8 +212,13 @@ void activate_lights(std::shared_ptr<Shader> shader)
 
 void RenderScene(std::shared_ptr<Shader> shader)
 {
+    masterRenderer->finishRender(windowManager, scene1->m_camera);
     player->render();
     courier->render();
+    //iisland->render();
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    shader->setMat4("model", iisland->get_transform().m_world_matrix);
 
     shader->setInt("texture1", 0);
     //glActiveTexture(GL_TEXTURE0);
@@ -262,9 +232,8 @@ void RenderScene(std::shared_ptr<Shader> shader)
     //shader->setMat4("model", twod2->get_transform().m_world_matrix);
     //glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    //glBindTexture(GL_TEXTURE_2D, texture1);
     //shader->setMat4("model", spunkt->get_transform().m_world_matrix);
-    //quad->Render(6);
+    quad->Render(36);
     //glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -272,11 +241,11 @@ void render()
 {
     // render
 // ------
-    glClearColor(0.8f, 0.8f, 1.f, 0.6f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
+    //glClearColor(0.8f, 0.8f, 1.f, 0.6f);
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
     // activate shader
-    glm::mat4 projection = glm::perspective(glm::radians(scene1->getCamera()->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
-
+    glm::mat4 projection = glm::perspective(glm::radians(scene1->m_camera->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
+    scene1->m_camera->m_projectionMatrix = projection;
     shadowMap->use();
     shadowMap->setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
@@ -365,7 +334,7 @@ void render()
 void render_gui()
 {
     //textRenderer->RenderText("Position " + std::to_string(player->get_transform().m_position.x) + " " + std::to_string(player->get_transform().m_position.y), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
-    textRenderer->RenderText("Position " + std::to_string(inputManager->m_posx) + " " + std::to_string(inputManager->m_posy), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
+    //textRenderer->RenderText("Position " + std::to_string(inputManager->m_posx) + " " + std::to_string(inputManager->m_posy), 10.0f, 60.0f, 0.5f, glm::vec3(1.0, 0.8f, 1.0f));
 }
 
 int main()
@@ -375,14 +344,16 @@ int main()
 
     if (windowManager->createWindow() == -1)
         return -1;
-
     glfwSetFramebufferSizeCallback(windowManager->window, framebuffer_size_callback);
-    //glfwSetCursorPosCallback(windowManager->window, );
+    glfwSetCursorPosCallback(windowManager->window, mouse_callback);
+    //glfwSetKeyCallback(windowManager->window)
+    processInput(windowManager->window);
     glfwSetScrollCallback(windowManager->window, scroll_callback);
     inputManager = std::make_shared<InputManager>(windowManager->window);
     colMan = std::make_shared<Collision>();
 
-    windowManager->freeCursor();
+    //windowManager->freeCursor();
+    windowManager->blockCursor();
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -395,16 +366,16 @@ int main()
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_BACK);
+    //glFrontFace(GL_CCW);
     // build and compile our shader zprogram
     // ------------------------------------
 
     Ref<Model> b = CreateRef<Model>(Model("res/models/cube/cube.obj"));
     Ref<Model> bu = CreateRef<Model>(Model("res/models/statek/untitled.obj"));
-    Ref<Model> scene = CreateRef<Model>(Model("res/models/scene/scene.obj"));
+    //Ref<Model> scene = CreateRef<Model>(Model("res/models/scene/scene.obj"));
+    Ref<Model> island = CreateRef<Model>(Model("res/models/island/island.obj"));
     scene1 = CreateRef<Scene>("Scene 1");
 
     audioManager = CreateRef<AudioManager>();
@@ -530,6 +501,8 @@ int main()
     shadowMap = std::make_shared<Shader>("res/shaders/shadowmapping.vert", "res/shaders/shadowmapping.frag");
     debugDepth = std::make_shared<Shader>("res/shaders/debugdepth.vert", "res/shaders/debugdepth.frag");
     activate_lights(ourShader);
+    masterRenderer = CreateRef<MasterRenderer>();
+    masterRenderer->setQuadShader(ourShader);
 
     model_s = glm::mat4(1.0f);
     model_s = glm::scale(model_s, { 0.1f, 0.1f, 0.1f });
@@ -583,7 +556,7 @@ int main()
     glReadBuffer(GL_NONE);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-    quad = CreateRef<Shape>(Shape(vertices, sizeof(vertices), Coords::COORDSTEXTNORM));
+    quad = CreateRef<Shape>(Shape(Coords::COORDSTEXT));
 
     root = std::make_shared<SceneNode>(SceneNode());
     spunkt = std::make_shared<SceneNode>(SceneNode());
@@ -592,7 +565,7 @@ int main()
     twod = std::make_shared<SceneNode>(SceneNode());
     twod2 = std::make_shared<SceneNode>(SceneNode());
     //spunkt->set_local_scale({ 0.1, 0.1, 0.1 });
-    spunkt->set_local_position({ 0, -6, 0 });
+    spunkt->set_local_position({ 0, 10, 0 });
     spunkt->set_local_scale({ 20, 20, 1 });
     spunkt->set_local_rotation({ 90, 0, 0 });
     twodOrbit->set_local_position({ 0, 0, 0 });
@@ -605,8 +578,8 @@ int main()
     twodOrbit->add_child(twod);
     twodOrbit->add_child(twod2);
 
-    projection = glm::perspective(glm::radians(scene1->getCamera()->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
-    mousePicker = CreateRef<MousePicker>(MousePicker(scene1->getCamera(), projection, inputManager));
+    projection = glm::perspective(glm::radians(scene1->m_camera->Zoom), (float)WindowManager::SCR_WIDTH / (float)WindowManager::SCR_HEIGHT, 0.1f, 100.0f);
+    mousePicker = CreateRef<MousePicker>(MousePicker(scene1->m_camera, projection, inputManager));
     player = std::make_shared<Player>(inputManager, b, ourShader, colMan);
     courier = std::make_shared<Courier>( mousePicker, bu, ourShader, colMan);
     courier->set_local_position({ 2, 0, 0 });
@@ -614,22 +587,28 @@ int main()
     player->set_local_position({ -2, 0, 0 });
     //player->set_render_AABB(true);
     courier->set_render_AABB(true);
-    //courier->set_color({ 0.6, 0.6, 0.6 });
+    //courier->set_color({ 1, 0.0, 0.0 });
+
+    iisland = CreateRef<GObject>(GObject(island, ourShader, colMan));
+    iisland->set_local_position({ 0, -2, 0 });
+    iisland->set_render_AABB(true);
+
     root->add_child(player);
     root->add_child(courier);
+    root->add_child(iisland);
     player->add_parent(root);
     courier->add_parent(root);
+    iisland->add_parent(root);
     root->update(root->get_transform(), true);
 
-    scene1->getCamera()->player = player;
-
+    scene1->m_camera->player = player;
 
     // load and create a texture 
     // -------------------------
     stbi_set_flip_vertically_on_load(true);
     texture1 = loadTexture(std::string("res/textures/torus.png").c_str());
     texture2 = loadTexture(std::string("res/textures/crate.png").c_str());
-    traincubesTexture = loadTexture(std::string("res/textures/torus.png").c_str());
+    //traincubesTexture = loadTexture(std::string("res/textures/torus.png").c_str());
 
     lightProjection = glm::ortho(-20.0f, 20.0f, -20.0f, 20.0f, near_plane, far_plane);
     lightView = glm::lookAt(-lightPos, glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0, 1.0, 0.0));
@@ -696,16 +675,15 @@ void processInput(GLFWwindow* window)
 {
     //if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         //glfwSetWindowShouldClose(window, true);
-    /*
+    
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        camera.ProcessKeyboard(FORWARD, passed_time);
+        scene1->m_camera->ProcessKeyboard(FORWARD, passed_time);
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        camera.ProcessKeyboard(BACKWARD, passed_time);
+        scene1->m_camera->ProcessKeyboard(BACKWARD, passed_time);
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, passed_time);
+        scene1->m_camera->ProcessKeyboard(LEFT, passed_time);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        camera.ProcessKeyboard(RIGHT, passed_time);
-    */
+        scene1->m_camera->ProcessKeyboard(RIGHT, passed_time);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -715,9 +693,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
     glViewport(0, 0, width, height);
 }
 
-//void mouse_callback(GLFWwindow* window, double xpos, double ypos)
-//{
-    /*
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    
     if (firstMouse)
     {
         lastX = xpos;
@@ -730,15 +708,15 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
     lastX = xpos;
     lastY = ypos;
-    camera.ProcessMouseMovement(xoffset, yoffset);
-    */
-//}
+    scene1->m_camera->ProcessMouseMovement(xoffset, yoffset);
+    
+}
 
 // glfw: whenever the mouse scroll wheel scrolls, this callback is called
 // ----------------------------------------------------------------------
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    //camera.ProcessMouseScroll(yoffset);
+    scene1->m_camera->ProcessMouseScroll(yoffset);
 }
 
 // utility function for loading a 2D texture from file

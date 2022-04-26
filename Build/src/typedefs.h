@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "types.h"
 
 template <typename T>
 using Ref = std::shared_ptr<T>;

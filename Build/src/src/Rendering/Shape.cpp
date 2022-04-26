@@ -1,13 +1,117 @@
 #include "Rendering/Shape.h"
 
-GameEngine::Shape::Shape(float vertices[], int size, Coords verts)
+float m_tnvertices[] = {
+    /*
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.5f, 0.0f,  0.0f, -1.0f,
+         0.5f, -0.5f, -0.5f,  0.5f, 0.5f, 0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.5f, 1.0f, 0.0f,  0.0f, -1.0f,
+         0.5f,  0.5f, -0.5f,  0.5f, 1.0f, 0.0f,  0.0f, -1.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+        -0.5f, -0.5f, -0.5f,  1.0f, 0.5f, 0.0f,  0.0f, -1.0f,
+     */
+         0.5f,  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.5f, 0.0f,  0.0f,  1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.5f, 0.0f,  0.0f,  1.0f,
+         0.5f, -0.5f,  0.5f,  0.5f, 0.5f, 0.0f,  0.0f,  1.0f,
+         0.5f,  0.5f,  0.5f,  0.5f, 1.0f, 0.0f,  0.0f,  1.0f,
+
+
+        -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 0.5f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.5f, 0.0f, -1.0f,  0.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.5f, 0.5f, -1.0f,  0.0f,  0.0f,
+
+         0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 0.5f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  0.5f, 0.0f, 1.0f,  0.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  0.5f, 0.5f, 1.0f,  0.0f,  0.0f,
+
+         0.5f, -0.5f, -0.5f,  0.5f, 0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.5f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f,  0.5f,  0.5f, 0.0f,  0.0f, -1.0f,  0.0f,
+        -0.5f, -0.5f, -0.5f,  0.5f, 0.5f,  0.0f, -1.0f,  0.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.5f, 0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 0.5f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f,  0.5f,  0.5f, 0.0f,  0.0f,  1.0f,  0.0f,
+        -0.5f,  0.5f, -0.5f,  0.5f, 0.5f,  0.0f,  1.0f,  0.0f,
+};
+
+static float m_tvertices[] = {
+
+    // back face
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  0.0f, -1.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 0.0f, 0.0f,  0.0f, -1.0f,
+
+    // front face
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 1.0f, 0.0f,  0.0f,  1.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 1.0f, 0.0f,  0.0f,  1.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  0.0f,  1.0f,
+
+    // left
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  1.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, -1.0f,  0.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, -1.0f,  0.0f,  0.0f, 
+    -0.5f,  0.5f,  0.5f,  1.0f, 0.0f, -1.0f,  0.0f,  0.0f,
+
+    // right
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 1.0f,  0.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 1.0f,  0.0f,  0.0f,
+
+     // bottom
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  -1.0f,  0.0f,
+     0.5f, -0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  -1.0f,  0.0f,
+     0.5f, -0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  -1.0f,  0.0f,
+    -0.5f, -0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  -1.0f,  0.0f,
+    -0.5f, -0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  -1.0f,  0.0f,
+
+    // top
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f, -0.5f,  1.0f, 1.0f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+     0.5f,  0.5f,  0.5f,  1.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f,  0.5f,  0.0f, 0.0f, 0.0f,  1.0f,  0.0f,
+    -0.5f,  0.5f, -0.5f,  0.0f, 1.0f, 0.0f,  1.0f,  0.0f
+};
+
+GameEngine::Shape::Shape( Coords verts)
 {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
+    if (verts == Coords::COORDSTEXTNORM)
+    {
+        glBufferData(GL_ARRAY_BUFFER, sizeof(m_tnvertices), m_tnvertices, GL_STATIC_DRAW);
+
+    }
+    else {
+        glBufferData(GL_ARRAY_BUFFER, sizeof(m_tvertices), m_tvertices, GL_STATIC_DRAW);
+    }
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
@@ -18,6 +122,7 @@ GameEngine::Shape::Shape(float vertices[], int size, Coords verts)
     // normal attribute
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
     glEnableVertexAttribArray(2);
+    
 
     glBindVertexArray(0);
 }

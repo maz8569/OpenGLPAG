@@ -373,6 +373,15 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="src\Utils\IndexBuffer.cpp" />
+    <ClCompile Include="src\Blocks\LayerMesh.cpp" />
+    <ClCompile Include="src\Blocks\Direction.cpp" />
+    <ClCompile Include="src\Blocks\Layer.cpp" />
+    <ClCompile Include="src\Blocks\Block.cpp" />
+    <ClCompile Include="src\Shaders\BasicShader.cpp" />
+    <ClCompile Include="src\Rendering\QuadRenderer.cpp" />
+    <ClCompile Include="src\World\ChunkMesh.cpp" />
     <ClCompile Include="src\World\ChunkSection.cpp" />
     <ClCompile Include="src\Texture\BasicTexture.cpp" />
     <ClCompile Include="src\Utils\FileUtil.cpp" />
@@ -407,6 +416,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="src\Scene\Terrain.cpp" />
     <ClCompile Include="src\World\World.cpp" />
     <ClCompile Include="src\Texture\TextureAtlas.cpp" />
+    <ClCompile Include="src\World\TileModel.cpp" />
+    <ClCompile Include="src\Utils\VertexBuffer.cpp" />
+    <ClCompile Include="src\Utils\VertexArray.cpp" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="include\Blocks\Direction.h" />
+    <ClInclude Include="include\Blocks\Block.h" />
+    <ClInclude Include="include\Shaders\BasicShader.h" />
+    <ClInclude Include="include\Blocks\Layer.h" />
+    <ClInclude Include="include\Blocks\LayerMesh.h" />
+    <ClInclude Include="include\Utils\IndexBuffer.h" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="include\World\ChunkMesh.h" />
     <ClInclude Include="include\World\ChunkSection.h" />
     <ClInclude Include="include\Texture\BasicTexture.h" />
     <ClInclude Include="include\Utils\FileUtil.h" />
@@ -439,6 +460,10 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="include\Scene\Terrain.h" />
     <ClInclude Include="include\World\IChunk.h" />
     <ClInclude Include="include\Texture\TextureAtlas.h" />
+    <ClInclude Include="include\World\Model\TileMesh.h" />
+    <ClInclude Include="include\World\WorldConstants.h" />
+    <ClInclude Include="include\World\Model\TileModel.h" />
+    <ClInclude Include="include\Rendering\QuadRenderer.h" />
     <ClInclude Include="typedefs.h" />
     <ClInclude Include="include\Rendering\WindowManager.h" />
     <ClInclude Include="imgui_impl_glfw.h" />
@@ -455,9 +480,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="include\Scene\Player.h" />
     <ClInclude Include="include\Scene\Scene.h" />
     <ClInclude Include="include\Scene\SceneGraph.h" />
-    <ClInclude Include="include\Rendering\Shader.h" />
+    <ClInclude Include="include\Shaders\Shader.h" />
     <ClInclude Include="train.h" />
     <ClInclude Include="include\World\World.h" />
+    <ClInclude Include="include\Utils\VertexBuffer.h" />
+    <ClInclude Include="include\Utils\VertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="E:\prog\OpenGLPAG\OpenGLPAG\Build\ZERO_CHECK.vcxproj">

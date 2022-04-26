@@ -17,7 +17,7 @@ namespace GameEngine {
 
 	public:
 
-		Shape(float vertices[], int size, Coords verts);
+		Shape(Coords verts);
 
 		void clean();
 		void Render(int numb);

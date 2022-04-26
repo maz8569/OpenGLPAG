@@ -10,7 +10,7 @@
 #include <assimp/postprocess.h>
 
 #include <Rendering/Mesh.h>
-#include <Rendering/Shader.h>
+#include <Shaders/Shader.h>
 
 #include <string>
 #include <fstream>

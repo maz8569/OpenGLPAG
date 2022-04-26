@@ -4,23 +4,33 @@
 
 namespace GameEngine {
 
-	class AABB;
+    struct FrustumAABB
+    {
+        FrustumAABB(const glm::vec3& dimensions, const glm::vec3& position);
 
-	struct Plane {
-		float distanceToPoint(const glm::vec3& point) const;
+        glm::vec3 GetVN(const glm::vec3& normal) const;
+        glm::vec3 GetVP(const glm::vec3& normal) const;
 
-		float distanceToOrigin;
-		glm::vec3 normal;
-	};
+        const glm::vec3 m_Dimensions;
+        const glm::vec3 m_Position;
+    };
 
-	class ViewFrustum {
-	public:
-		void update(const glm::mat4& projViewMatrix) noexcept;
+    struct Plane
+    {
+        float distanceToPoint(const glm::vec3& point) const;
 
-		bool isBoxInFrustum(const AABB& box) const noexcept;
+        float distanceToOrigin;
+        glm::vec3 normal;
+    };
 
-	private:
-		std::array<Plane, 6> m_planes;
-	};
+    class ViewFrustum
+    {
+    public:
+        void Update(const glm::mat4& VP_Matrix);
+        bool BoxInFrustum(const FrustumAABB& box) const;
+
+    private:
+        std::array<Plane, 6> m_Planes;
+    };
 
 }

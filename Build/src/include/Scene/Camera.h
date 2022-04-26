@@ -158,14 +158,15 @@ namespace GameEngine {
             //second = courier.m_position;
             //std::cout << second[0] << " " << second[1] << " " << second[2] << std::endl;
             //}
-
-            Position = (player->get_transform().m_position + courier) * 0.5f;
+            
+            //Position = (player->get_transform().m_position + courier) * 0.5f;
             float x = player->get_transform().m_position.x - courier.x;
             float y = player->get_transform().m_position.y - courier.y;
             float distance = sqrtf( x * x + y * y) * 2;
             distance = clamp(distance, min_z, max_z);
-            Position -= Front * distance;
+            //Position -= Front * distance;
 
+            //std::cout << Position.x << " " << Position.y << " " << Position.z << "\n";
             updateCameraVectors();
             m_projViewMatrix = m_projectionMatrix * m_viewMatrix;
 

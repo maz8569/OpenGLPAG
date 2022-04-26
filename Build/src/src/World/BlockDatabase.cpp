@@ -24,3 +24,4 @@ GameEngine::BlockDatabase::BlockDatabase() : textureAtlas("DefaultPack")
     m_blocks[(int)BlockId::Grass] = std::make_unique<DefaultBlock>("Grass");
     m_blocks[(int)BlockId::Water] = std::make_unique<DefaultBlock>("Water");
 }
+

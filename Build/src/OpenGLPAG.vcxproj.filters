@@ -81,9 +81,21 @@
     <ClCompile Include="src\Texture\BasicTexture.cpp" />
     <ClCompile Include="src\Texture\TextureAtlas.cpp" />
     <ClCompile Include="src\World\ChunkSection.cpp" />
+    <ClCompile Include="src\World\ChunkMesh.cpp" />
+    <ClCompile Include="src\World\TileModel.cpp" />
+    <ClCompile Include="src\Rendering\QuadRenderer.cpp" />
+    <ClCompile Include="src\Shaders\BasicShader.cpp" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="src\Blocks\Block.cpp" />
+    <ClCompile Include="src\Utils\VertexBuffer.cpp" />
+    <ClCompile Include="src\Utils\VertexArray.cpp" />
+    <ClCompile Include="src\Blocks\Layer.cpp" />
+    <ClCompile Include="src\Blocks\Direction.cpp" />
+    <ClCompile Include="src\Blocks\LayerMesh.cpp" />
+    <ClCompile Include="src\Utils\IndexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Rendering\Shader.h">
+    <ClInclude Include="include\Shaders\Shader.h">
       <Filter>sources</Filter>
     </ClInclude>
     <ClInclude Include="include\Rendering\Mesh.h">
@@ -180,6 +192,21 @@
     <ClInclude Include="include\Texture\BasicTexture.h" />
     <ClInclude Include="include\Texture\TextureAtlas.h" />
     <ClInclude Include="include\World\ChunkSection.h" />
+    <ClInclude Include="include\World\WorldConstants.h" />
+    <ClInclude Include="include\World\ChunkMesh.h" />
+    <ClInclude Include="include\World\Model\TileMesh.h" />
+    <ClInclude Include="include\World\Model\TileModel.h" />
+    <ClInclude Include="include\Rendering\QuadRenderer.h" />
+    <ClInclude Include="include\Shaders\BasicShader.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="include\Blocks\Block.h" />
+    <ClInclude Include="include\Utils\VertexBuffer.h" />
+    <ClInclude Include="include\Utils\VertexArray.h" />
+    <ClInclude Include="types.h" />
+    <ClInclude Include="include\Blocks\Layer.h" />
+    <ClInclude Include="include\Blocks\Direction.h" />
+    <ClInclude Include="include\Blocks\LayerMesh.h" />
+    <ClInclude Include="include\Utils\IndexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="E:\prog\OpenGLPAG\OpenGLPAG\src\CMakeLists.txt">

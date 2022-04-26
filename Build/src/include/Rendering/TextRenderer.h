@@ -4,7 +4,7 @@
 #include <ft2build.h>
 #include "typedefs.h"
 #include <map>
-#include <Rendering/Shader.h>
+#include <Shaders/Shader.h>
 #include FT_FREETYPE_H
 
 namespace GameEngine {

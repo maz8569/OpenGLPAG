@@ -31,6 +31,10 @@ int GameEngine::WindowManager::createWindow()
     }
     glfwMakeContextCurrent(window);
 
+    glfwSwapInterval(1);
+
+    std::cout << "Create Window\n";
+
     return 0;
 }
 
